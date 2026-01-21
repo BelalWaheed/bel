@@ -1,0 +1,34 @@
+import { Route, Routes } from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+// User Pages
+import Home from "@/pages/user/Home";
+import Products from "@/pages/user/Products";
+import Cart from "@/pages/user/Cart";
+import Login from "@/pages/user/Login";
+import SignUp from "@/pages/user/SignUp";
+import UserProfile from "@/pages/user/UserProfile";
+import NotFound from "@/pages/user/NotFound";
+
+export default function UserLayout() {
+  return (
+    <div className="min-h-screen bg-linear-to-l from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] transition-colors duration-300">
+      <Navbar />
+
+      <main className="min-h-[calc(100vh-200px)]">
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="products" element={<Products />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="login" element={<Login />} />
+          <Route path="sign-up" element={<SignUp />} />
+          <Route path="profile" element={<UserProfile />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

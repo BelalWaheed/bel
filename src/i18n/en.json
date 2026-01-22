@@ -1,0 +1,68 @@
+{
+  "common": {
+    "home": "Home",
+    "shop": "Shop",
+    "products": "Products",
+    "cart": "Cart",
+    "login": "Login",
+    "logout": "Logout",
+    "signUp": "Sign Up",
+    "profile": "Profile",
+    "search": "Search",
+    "all": "All",
+    "allCategories": "All Categories",
+    "clearFilters": "Clear Filters",
+    "showFilters": "Show Filters",
+    "hideFilters": "Hide Filters",
+    "noProductsFound": "No products found",
+    "tryAdjustingFilters": "Try adjusting your filters to find what you're looking for.",
+    "resetFilters": "Reset Filters",
+    "showing": "Showing",
+    "of": "of",
+    "ourProducts": "Our Products",
+    "addToCart": "Add to Cart",
+    "quantity": "Quantity",
+    "backToProducts": "Back to Products",
+    "productNotFound": "Product Not Found",
+    "relatedProducts": "Related Products",
+    "clickToZoom": "Click to zoom",
+    "reviews": "reviews"
+  },
+  "filters": {
+    "category": "Category",
+    "priceRange": "Price Range",
+    "minPrice": "Min Price",
+    "maxPrice": "Max Price",
+    "range": "Range"
+  },
+  "navbar": {
+    "toggleTheme": "Toggle Theme",
+    "toggleLanguage": "Toggle Language",
+    "cartItems": "cart items"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions"
+  },
+  "cart": {
+    "yourCart": "Your Cart",
+    "emptyCart": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "continueShopping": "Continue Shopping"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Name",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?"
+  }
+}

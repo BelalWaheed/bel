@@ -7,6 +7,7 @@ import { products } from "./userSlices/productSlice";
 import { profile } from "./userSlices/profileSlice";
 import { theme } from "./userSlices/themeSlice";
 import { user } from "./userSlices/userSlice";
+import language from "./userSlices/languageSlice";
 
 // Admin Slices
 import { adminAdd } from "./adminSlices/addSlice";
@@ -19,6 +20,7 @@ const store = configureStore({
     profile,
     theme,
     user,
+    language,
     adminAdd,
     editUser,
     flags,

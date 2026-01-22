@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { FaCartPlus, FaChevronLeft } from "react-icons/fa";
+import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import { addProduct } from "@/redux/userSlices/productSlice";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 import type { Product } from "@/types";
 
 // Star Rating Component
-const StarRating = ({ rating, count }: { rating: number; count?: number }) => (
+const StarRating = ({ rating, count, reviewsLabel }: { rating: number; count?: number; reviewsLabel?: string }) => (
   <div className="flex items-center gap-2">
     <div className="flex gap-1">
       {[...Array(5)].map((_, i) => (
@@ -31,7 +32,7 @@ const StarRating = ({ rating, count }: { rating: number; count?: number }) => (
       ))}
     </div>
     {count && (
-      <span className="text-muted-foreground text-sm">({count} reviews)</span>
+      <span className="text-muted-foreground text-sm">({count} {reviewsLabel || "reviews"})</span>
     )}
   </div>
 );
@@ -92,6 +93,7 @@ export default function ProductDetails() {
   const { productId } = useParams<{ productId: string }>();
   const { products } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
+  const { t, isRTL } = useTranslation();
   const [isZoomed, setIsZoomed] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -108,17 +110,20 @@ export default function ProductDetails() {
     .filter((p) => p.category === product?.category && p.id !== productId)
     .slice(0, 4);
 
+  // Use appropriate chevron icon based on RTL
+  const BackIcon = isRTL ? FaChevronRight : FaChevronLeft;
+
   if (!product) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-foreground mb-4">
-            Product Not Found
+            {t("common.productNotFound")}
           </h1>
           <Link to="/products">
             <Button variant="outline">
-              <FaChevronLeft className="mr-2" />
-              Back to Products
+              <BackIcon className="mx-2" />
+              {t("common.backToProducts")}
             </Button>
           </Link>
         </div>
@@ -131,8 +136,8 @@ export default function ProductDetails() {
       <div className="max-w-7xl mx-auto">
         {/* Back Button */}
         <Link to="/products" className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors mb-8">
-          <FaChevronLeft className="mr-2" />
-          Back to Products
+          <BackIcon className="mx-2" />
+          {t("common.backToProducts")}
         </Link>
 
         {/* Product Details Section */}
@@ -158,7 +163,7 @@ export default function ProductDetails() {
               />
               {!isZoomed && (
                 <div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                  Click to zoom
+                  {t("common.clickToZoom")}
                 </div>
               )}
             </div>
@@ -178,6 +183,7 @@ export default function ProductDetails() {
               <StarRating
                 rating={Math.floor(product.rating.rate)}
                 count={product.rating.count}
+                reviewsLabel={t("common.reviews")}
               />
             </div>
 
@@ -193,7 +199,7 @@ export default function ProductDetails() {
 
             {/* Quantity Selector */}
             <div className="flex items-center gap-4 mb-8">
-              <span className="text-foreground font-medium">Quantity:</span>
+              <span className="text-foreground font-medium">{t("common.quantity")}:</span>
               <div className="flex items-center border border-border rounded-lg overflow-hidden">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -219,8 +225,8 @@ export default function ProductDetails() {
               size="lg"
               className="w-full md:w-auto bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <FaCartPlus className="mr-2 text-xl" />
-              Add to Cart
+              <FaCartPlus className="mx-2 text-xl" />
+              {t("common.addToCart")}
             </Button>
           </div>
         </div>
@@ -229,7 +235,7 @@ export default function ProductDetails() {
         {relatedProducts.length > 0 && (
           <section>
             <h2 className="text-2xl font-bold text-foreground mb-8">
-              Related Products
+              {t("common.relatedProducts")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relatedProduct) => (

@@ -9,11 +9,13 @@ import {
 } from "@/redux/userSlices/productSlice";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 import type { CartItem } from "@/types";
 
 export default function Cart() {
   const { cart } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
+  const { t, language } = useTranslation();
 
   const [toast, setToast] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -26,26 +28,28 @@ export default function Cart() {
   const total = subtotal + taxes;
 
   const generateCartMessage = (cartItems: CartItem[]) => {
-    if (!cartItems || cartItems.length === 0) return "My cart is empty.";
+    if (!cartItems || cartItems.length === 0) {
+      return language === "ar" ? "سلتي فارغة." : "My cart is empty.";
+    }
 
     const lines: string[] = [];
-    lines.push("Hello, I want to order the following items:");
+    lines.push(language === "ar" ? "مرحباً، أريد طلب المنتجات التالية:" : "Hello, I want to order the following items:");
     lines.push("");
     cartItems.forEach((item, idx) => {
       lines.push(
-        `${idx + 1}. ${item.title} — Qty: ${item.quantity} — Unit: $${item.price.toFixed(2)} — Line: $${(item.price * item.quantity).toFixed(2)}`
+        `${idx + 1}. ${item.title} — ${language === "ar" ? "الكمية" : "Qty"}: ${item.quantity} — ${language === "ar" ? "السعر" : "Unit"}: $${item.price.toFixed(2)} — ${language === "ar" ? "المجموع" : "Line"}: $${(item.price * item.quantity).toFixed(2)}`
       );
     });
     lines.push("");
-    lines.push(`Subtotal: $${subtotal.toFixed(2)}`);
-    lines.push(`Taxes (14%): $${taxes.toFixed(2)}`);
-    lines.push(`Total: $${total.toFixed(2)}`);
+    lines.push(`${language === "ar" ? "المجموع الفرعي" : "Subtotal"}: $${subtotal.toFixed(2)}`);
+    lines.push(`${language === "ar" ? "الضرائب" : "Taxes"} (14%): $${taxes.toFixed(2)}`);
+    lines.push(`${language === "ar" ? "الإجمالي" : "Total"}: $${total.toFixed(2)}`);
     lines.push("");
-    lines.push("Name:");
-    lines.push("Phone:");
-    lines.push("Address (if delivery):");
+    lines.push(language === "ar" ? "الاسم:" : "Name:");
+    lines.push(language === "ar" ? "الهاتف:" : "Phone:");
+    lines.push(language === "ar" ? "العنوان (للتوصيل):" : "Address (if delivery):");
     lines.push("");
-    lines.push("Thank you!");
+    lines.push(language === "ar" ? "شكراً!" : "Thank you!");
     return lines.join("\n");
   };
 
@@ -57,7 +61,7 @@ export default function Cart() {
 
   const handleCheckout = async () => {
     if (!cart || cart.length === 0) {
-      showTemporaryToast("Your cart is empty.");
+      showTemporaryToast(t("cart.emptyCart"));
       return;
     }
 
@@ -68,12 +72,16 @@ export default function Cart() {
       await navigator.clipboard.writeText(message);
       window.open(igDmLink, "_blank");
       showTemporaryToast(
-        "Order copied! Open Instagram DM and paste it, then send."
+        language === "ar" 
+          ? "تم نسخ الطلب! افتح رسائل انستجرام والصقه ثم أرسله."
+          : "Order copied! Open Instagram DM and paste it, then send."
       );
     } catch {
       window.open(igDmLink, "_blank");
       showTemporaryToast(
-        "Unable to copy automatically. Open Instagram DM and paste your order."
+        language === "ar"
+          ? "تعذر النسخ تلقائياً. افتح رسائل انستجرام والصق طلبك."
+          : "Unable to copy automatically. Open Instagram DM and paste your order."
       );
     }
   };
@@ -81,17 +89,17 @@ export default function Cart() {
   return (
     <div className="p-4 sm:p-6 min-h-screen bg-linear-to-l from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] text-foreground relative">
       <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-10 text-center">
-        Shopping Cart
+        {t("cart.yourCart")}
       </h2>
 
       {cart.length === 0 ? (
         <div className="flex flex-col justify-center items-center h-72 gap-6 text-center">
           <p className="text-xl sm:text-2xl font-bold text-pink-700 dark:text-pink-300">
-            Your cart is empty
+            {t("cart.emptyCart")}
           </p>
           <Link to="/products">
             <Button className="px-6 py-3 bg-primary text-primary-foreground">
-              Shop
+              {t("common.shop")}
             </Button>
           </Link>
         </div>
@@ -161,19 +169,21 @@ export default function Cart() {
 
           {/* Summary */}
           <div className="w-full lg:w-1/3 bg-white dark:bg-[#1e293b] shadow-md rounded-lg p-4 sm:p-6 h-fit">
-            <h3 className="text-xl font-bold mb-4">Summary</h3>
+            <h3 className="text-xl font-bold mb-4">
+              {language === "ar" ? "الملخص" : "Summary"}
+            </h3>
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex justify-between">
-                <span>Subtotal</span>
+                <span>{language === "ar" ? "المجموع الفرعي" : "Subtotal"}</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Taxes (14%)</span>
+                <span>{language === "ar" ? "الضرائب" : "Taxes"} (14%)</span>
                 <span>${taxes.toFixed(2)}</span>
               </div>
               <hr className="my-2 border-border" />
               <div className="flex justify-between font-semibold text-lg text-foreground">
-                <span>Total</span>
+                <span>{t("cart.total")}</span>
                 <span>${total.toFixed(2)}</span>
               </div>
             </div>
@@ -182,7 +192,7 @@ export default function Cart() {
               onClick={handleCheckout}
               className="w-full mt-6 py-3 bg-red-700 hover:bg-red-800 text-white font-semibold text-sm hover:scale-105 transition"
             >
-              CHECKOUT
+              {t("cart.checkout")}
             </Button>
           </div>
         </div>

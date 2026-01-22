@@ -3,14 +3,18 @@ import { Link } from "react-router-dom";
 import { HiShoppingCart, HiMenu, HiX } from "react-icons/hi";
 import { MdOutlineLightMode } from "react-icons/md";
 import { CiDark } from "react-icons/ci";
+import { HiLanguage } from "react-icons/hi2";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import { darkMode, lightMode } from "@/redux/userSlices/themeSlice";
+import { toggleLanguage } from "@/redux/userSlices/languageSlice";
 import { Button } from "@/components/ui/button";
 import UserProfileMenu from "./UserProfileMenu";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Navbar() {
   const [openNav, setOpenNav] = useState(false);
   const dispatch = useAppDispatch();
+  const { t, language } = useTranslation();
 
   const { theme } = useAppSelector((state) => state.theme);
   const { cart } = useAppSelector((state) => state.products);
@@ -34,6 +38,10 @@ export default function Navbar() {
     }
   };
 
+  const handleToggleLanguage = () => {
+    dispatch(toggleLanguage());
+  };
+
   return (
     <nav className="mx-auto max-w-7xl px-4 py-2 rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 bg-linear-to-l from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b]">
       <div className="flex items-center justify-between text-foreground">
@@ -51,13 +59,13 @@ export default function Navbar() {
             to="/"
             className="cursor-pointer md:text-3xl text-2xl py-1.5 lg:ml-2 pt-serif-regular-italic hover:text-primary transition-colors"
           >
-            Home
+            {t("common.home")}
           </Link>
           <Link
             to="/products"
             className="mr-4 cursor-pointer md:text-3xl text-2xl py-1.5 lg:ml-2 pt-serif-regular-italic hover:text-primary transition-colors"
           >
-            Shop
+            {t("common.shop")}
           </Link>
         </div>
 
@@ -77,6 +85,16 @@ export default function Navbar() {
               </span>
             )}
           </div>
+
+          {/* Language Toggle */}
+          <button
+            onClick={handleToggleLanguage}
+            className="p-1 cursor-pointer transition-colors duration-300 hover:text-primary flex items-center gap-1"
+            title={t("navbar.toggleLanguage")}
+          >
+            <HiLanguage className="text-2xl" />
+            <span className="text-sm font-semibold">{language.toUpperCase()}</span>
+          </button>
 
           {/* Theme Toggle */}
           <button
@@ -100,7 +118,7 @@ export default function Navbar() {
                 size="sm"
                 className="bg-teal-200 hover:bg-purple-300 dark:bg-white/10 dark:hover:bg-white/20 text-gray-800 dark:text-white"
               >
-                Log In
+                {t("common.login")}
               </Button>
             </Link>
           )}
@@ -137,6 +155,15 @@ export default function Navbar() {
             )}
           </div>
 
+          {/* Language Toggle */}
+          <button
+            onClick={handleToggleLanguage}
+            className="p-1 cursor-pointer transition-colors duration-300 flex items-center gap-1"
+          >
+            <HiLanguage className="text-2xl" />
+            <span className="text-sm font-semibold">{language.toUpperCase()}</span>
+          </button>
+
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
@@ -159,7 +186,7 @@ export default function Navbar() {
                 size="sm"
                 className="bg-teal-200 hover:bg-purple-300 dark:bg-white/10 dark:hover:bg-white/20 text-gray-800 dark:text-white"
               >
-                Log In
+                {t("common.login")}
               </Button>
             </Link>
           )}

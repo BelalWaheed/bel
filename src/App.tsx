@@ -5,6 +5,7 @@ import { setAllUsers } from "@/redux/userSlices/userSlice";
 import { setLogged, setLoggedUser } from "@/redux/userSlices/profileSlice";
 import { setLoading, setProducts, resetCart } from "@/redux/userSlices/productSlice";
 import { initializeTheme } from "@/redux/userSlices/themeSlice";
+import { initializeLanguage } from "@/redux/userSlices/languageSlice";
 import { userApi, productApi } from "@/lib/api";
 
 import UserLayout from "@/layouts/UserLayout";
@@ -24,9 +25,10 @@ export default function App() {
   const { logged, loggedUser } = useAppSelector((state) => state.profile);
   const { productChanged, userChanged } = useAppSelector((state) => state.flags);
 
-  // Initialize theme on mount
+  // Initialize theme and language on mount
   useEffect(() => {
     dispatch(initializeTheme());
+    dispatch(initializeLanguage());
   }, [dispatch]);
 
   // Fetch all users and logged user

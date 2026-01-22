@@ -1,0 +1,68 @@
+{
+  "common": {
+    "home": "الرئيسية",
+    "shop": "المتجر",
+    "products": "المنتجات",
+    "cart": "السلة",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "signUp": "إنشاء حساب",
+    "profile": "الملف الشخصي",
+    "search": "بحث",
+    "all": "الكل",
+    "allCategories": "جميع الفئات",
+    "clearFilters": "مسح الفلاتر",
+    "showFilters": "إظهار الفلاتر",
+    "hideFilters": "إخفاء الفلاتر",
+    "noProductsFound": "لم يتم العثور على منتجات",
+    "tryAdjustingFilters": "حاول تعديل الفلاتر للعثور على ما تبحث عنه.",
+    "resetFilters": "إعادة تعيين الفلاتر",
+    "showing": "عرض",
+    "of": "من",
+    "ourProducts": "منتجاتنا",
+    "addToCart": "أضف للسلة",
+    "quantity": "الكمية",
+    "backToProducts": "العودة للمنتجات",
+    "productNotFound": "المنتج غير موجود",
+    "relatedProducts": "منتجات ذات صلة",
+    "clickToZoom": "انقر للتكبير",
+    "reviews": "تقييمات"
+  },
+  "filters": {
+    "category": "الفئة",
+    "priceRange": "نطاق السعر",
+    "minPrice": "الحد الأدنى",
+    "maxPrice": "الحد الأقصى",
+    "range": "النطاق"
+  },
+  "navbar": {
+    "toggleTheme": "تبديل المظهر",
+    "toggleLanguage": "تبديل اللغة",
+    "cartItems": "عناصر السلة"
+  },
+  "footer": {
+    "rights": "جميع الحقوق محفوظة",
+    "aboutUs": "من نحن",
+    "contact": "اتصل بنا",
+    "privacy": "سياسة الخصوصية",
+    "terms": "الشروط والأحكام"
+  },
+  "cart": {
+    "yourCart": "سلة التسوق",
+    "emptyCart": "سلتك فارغة",
+    "total": "المجموع",
+    "checkout": "إتمام الشراء",
+    "remove": "إزالة",
+    "continueShopping": "متابعة التسوق"
+  },
+  "auth": {
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "name": "الاسم",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "noAccount": "ليس لديك حساب؟",
+    "haveAccount": "لديك حساب بالفعل؟"
+  }
+}

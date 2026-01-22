@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { useTranslation } from "@/hooks/useTranslation";
 import type { Product } from "@/types";
 
 const StarRating = ({ rating }: { rating: number }) => {
@@ -41,6 +42,7 @@ const StarRating = ({ rating }: { rating: number }) => {
 export default function Products() {
   const { products } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   // Get min and max prices
   const priceStats = useMemo(() => {
@@ -102,7 +104,7 @@ export default function Products() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header with Filter Toggle */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Our Products</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t("common.ourProducts")}</h1>
           <div className="flex items-center gap-3">
             {hasActiveFilters && (
               <Button
@@ -111,8 +113,8 @@ export default function Products() {
                 onClick={resetFilters}
                 className="text-muted-foreground hover:text-foreground"
               >
-                <FaTimes className="mr-2" />
-                Clear Filters
+                <FaTimes className="mx-2" />
+                {t("common.clearFilters")}
               </Button>
             )}
             <Button
@@ -121,7 +123,7 @@ export default function Products() {
               className="flex items-center gap-2"
             >
               <FaFilter />
-              {showFilters ? "Hide Filters" : "Show Filters"}
+              {showFilters ? t("common.hideFilters") : t("common.showFilters")}
             </Button>
           </div>
         </div>
@@ -133,7 +135,7 @@ export default function Products() {
               {/* Category Filter */}
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-4">
-                  Category
+                  {t("filters.category")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((category) => (
@@ -146,7 +148,7 @@ export default function Products() {
                           : "bg-gray-100 dark:bg-gray-800 text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-700"
                       }`}
                     >
-                      {category === "all" ? "All Categories" : category}
+                      {category === "all" ? t("common.allCategories") : category}
                     </button>
                   ))}
                 </div>
@@ -155,7 +157,7 @@ export default function Products() {
               {/* Price Range Filter */}
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-4">
-                  Price Range
+                  {t("filters.priceRange")}
                 </h3>
                 <div className="space-y-4">
                   {/* Slider */}
@@ -170,33 +172,35 @@ export default function Products() {
                     className="w-full"
                   />
                   {/* Min Price */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex justify-around">
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Min Price</span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setPriceRange([Math.max(priceStats.min, priceRange[0] - 5), priceRange[1]])}
-                        disabled={priceRange[0] <= priceStats.min}
-                        className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-bold"
-                      >
-                        −
-                      </button>
-                      <span className="w-16 text-center font-semibold text-foreground">
-                        ${priceRange[0]}
-                      </span>
-                      <button
-                        onClick={() => setPriceRange([Math.min(priceRange[1] - 1, priceRange[0] + 5), priceRange[1]])}
-                        disabled={priceRange[0] >= priceRange[1] - 1}
-                        className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-bold"
-                      >
-                        +
-                      </button>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{t("filters.minPrice")}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setPriceRange([Math.max(priceStats.min, priceRange[0] - 5), priceRange[1]])}
+                          disabled={priceRange[0] <= priceStats.min}
+                          className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-bold"
+                        >
+                          −
+                        </button>
+                        <span className="w-16 text-center font-semibold text-foreground">
+                          ${priceRange[0]}
+                        </span>
+                        <button
+                          onClick={() => setPriceRange([Math.min(priceRange[1] - 1, priceRange[0] + 5), priceRange[1]])}
+                          disabled={priceRange[0] >= priceRange[1] - 1}
+                          className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                   {/* Max Price */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Max Price</span>
+                  <div className="flex items-center ">
+                    <span className="text-sm text-muted-foreground">{t("filters.maxPrice")}</span>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setPriceRange([priceRange[0], Math.max(priceRange[0] + 1, priceRange[1] - 5)])}
@@ -218,7 +222,6 @@ export default function Products() {
                     </div>
                   </div>
                   </div>
-                  
                 </div>
               </div>
             </div>
@@ -226,15 +229,15 @@ export default function Products() {
             {/* Results Count */}
             <div className="mt-6 pt-4 border-t border-border">
               <p className="text-sm text-muted-foreground">
-                Showing{" "}
+                {t("common.showing")}{" "}
                 <span className="font-semibold text-foreground">
                   {filteredProducts.length}
                 </span>{" "}
-                of{" "}
+                {t("common.of")}{" "}
                 <span className="font-semibold text-foreground">
                   {products.length}
                 </span>{" "}
-                products
+                {t("common.products")}
               </p>
             </div>
           </div>
@@ -258,7 +261,6 @@ export default function Products() {
                             "https://via.placeholder.com/300x300?text=No+Image";
                         }}
                       />
-
                     </CardHeader>
 
                     <CardContent className="flex-1">
@@ -293,13 +295,13 @@ export default function Products() {
           <div className="flex flex-col items-center justify-center py-20">
             <div className="text-6xl mb-4">🔍</div>
             <h2 className="text-2xl font-semibold text-foreground mb-2">
-              No products found
+              {t("common.noProductsFound")}
             </h2>
             <p className="text-muted-foreground mb-6 text-center">
-              Try adjusting your filters to find what you're looking for.
+              {t("common.tryAdjustingFilters")}
             </p>
             <Button onClick={resetFilters} variant="outline">
-              Reset Filters
+              {t("common.resetFilters")}
             </Button>
           </div>
         )}

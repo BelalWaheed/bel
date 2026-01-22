@@ -47,7 +47,38 @@
     "priceRange": "نطاق السعر",
     "minPrice": "الحد الأدنى",
     "maxPrice": "الحد الأقصى",
-    "range": "النطاق"
+    "range": "النطاق",
+    "gender": {
+      "all": "الكل",
+      "men": "رجال",
+      "women": "نساء",
+      "kids": "أطفال"
+    }
+  },
+  "categories": {
+    "electronics": "إلكترونيات",
+    "jewelery": "مجوهرات",
+    "men's clothing": "ملابس رجالية",
+    "women's clothing": "ملابس نسائية",
+    "jacket": "جاكيتات",
+    "shirt": "قمصان",
+    "pants": "بنطلونات",
+    "shoes": "أحذية",
+    "dress": "فساتين",
+    "coat": "معاطف",
+    "hoodie": "هوديز",
+    "sweater": "سويترات",
+    "skirt": "تنانير",
+    "shorts": "شورتات",
+    "accessories": "إكسسوارات",
+    "bags": "حقائب",
+    "hats": "قبعات"
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة",
+    "of": "من"
   },
   "navbar": {
     "toggleTheme": "تبديل المظهر",

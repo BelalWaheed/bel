@@ -1,5 +1,4 @@
-// API utility using fetch instead of axios
-const API_URL = import.meta.env.VITE_URL || "http://localhost:3000";
+const API_URL = import.meta.env.VITE_URL;
 
 interface FetchOptions extends RequestInit {
   body?: BodyInit | Record<string, unknown> | null;

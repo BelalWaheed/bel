@@ -124,7 +124,7 @@ export default function Products() {
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                  {t(`filters.gender.${gender}`)}
                 </button>
               ))}
             </div>
@@ -179,13 +179,13 @@ export default function Products() {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 capitalize ${
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                         selectedCategory === category
                           ? "gradient-primary text-white shadow-md"
                           : "bg-secondary text-muted-foreground hover:bg-secondary/80"
                       }`}
                     >
-                      {category === "all" ? t("common.allCategories") : category}
+                      {category === "all" ? t("common.allCategories") : (t(`categories.${category}`) || category)}
                     </button>
                   ))}
                 </div>
@@ -281,10 +281,10 @@ export default function Products() {
                   disabled={currentPage === 1}
                   className="rounded-full"
                 >
-                  Previous
+                  {t("pagination.previous")}
                 </Button>
                 <span className="text-sm font-medium">
-                  Page {currentPage} of {totalPages}
+                  {t("pagination.page")} {currentPage} {t("pagination.of")} {totalPages}
                 </span>
                 <Button
                   variant="outline"
@@ -292,7 +292,7 @@ export default function Products() {
                   disabled={currentPage === totalPages}
                   className="rounded-full"
                 >
-                  Next
+                  {t("pagination.next")}
                 </Button>
               </div>
             )}

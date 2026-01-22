@@ -57,7 +57,38 @@
     "priceRange": "Price Range",
     "minPrice": "Min Price",
     "maxPrice": "Max Price",
-    "range": "Range"
+    "range": "Range",
+    "gender": {
+      "all": "All",
+      "men": "Men",
+      "women": "Women",
+      "kids": "Kids"
+    }
+  },
+  "categories": {
+    "electronics": "Electronics",
+    "jewelery": "Jewelry",
+    "men's clothing": "Men's Clothing",
+    "women's clothing": "Women's Clothing",
+    "jacket": "Jackets",
+    "shirt": "Shirts",
+    "pants": "Pants",
+    "shoes": "Shoes",
+    "dress": "Dresses",
+    "coat": "Coats",
+    "hoodie": "Hoodies",
+    "sweater": "Sweaters",
+    "skirt": "Skirts",
+    "shorts": "Shorts",
+    "accessories": "Accessories",
+    "bags": "Bags",
+    "hats": "Hats"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
   },
   "navbar": {
     "toggleTheme": "Toggle Theme",

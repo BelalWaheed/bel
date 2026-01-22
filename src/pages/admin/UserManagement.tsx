@@ -116,7 +116,7 @@ export default function UserManagement() {
                       <div className="flex flex-wrap justify-center gap-2">
                         <Link to={`/admin/users/edit/${user.id}`}>
                           <Button size="sm" variant="outline" className="rounded-full hover:bg-secondary border-yellow-500/20 hover:border-yellow-500/50 text-yellow-600 dark:text-yellow-400">
-                             {t("admin.edit")}
+                             {t("common.edit")}
                           </Button>
                         </Link>
                         <Button
@@ -129,7 +129,7 @@ export default function UserManagement() {
                               : "rounded-full bg-red-500 hover:bg-red-600 text-white"
                           }
                         >
-                          {t("admin.delete")}
+                          {t("common.delete")}
                         </Button>
                         <Button
                           size="sm"

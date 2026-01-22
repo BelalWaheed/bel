@@ -34,11 +34,13 @@
     "learnMore": "تعرف علينا",
     "subscribe": "اشترك",
     "goHome": "العودة للرئيسية",
-    "adminDashboard": "لوحة التحكم",
     "dashboard": "الرئيسية",
     "users": "المستخدمين",
     "goToSite": "الذهاب للموقع",
-    "adminPanel": "لوحة الإدارة"
+    "adminPanel": "لوحة الإدارة",
+    "view": "عرض",
+    "edit": "تعديل",
+    "delete": "حذف"
   },
   "filters": {
     "category": "الفئة",

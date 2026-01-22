@@ -165,40 +165,66 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-20 bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-2">
+      <section className="py-24 relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-transparent to-secondary/20 pointer-events-none" />
+        <div className="absolute -left-20 top-40 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute -right-20 bottom-20 w-80 h-80 bg-accent/5 rounded-full blur-3xl" />
+
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
               <span className="gradient-text">{t("home.shopByCategory")}</span>
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {t("home.categoryDesc")}
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {categories.map((category) => {
               const categoryProducts = products.filter(p => p.category === category);
+              const displayImage = categoryProducts[0]?.image;
+
               return (
                 <Link
                   key={category}
                   to={`/products?category=${encodeURIComponent(category)}`}
-                  className="group"
+                  className="group relative"
                 >
-                  <div className="card-premium aspect-square p-6 flex flex-col items-center justify-center text-center group-hover:shadow-glow transition-all duration-300">
-                    {categoryProducts[0] && (
-                      <img
-                        src={categoryProducts[0].image}
-                        alt={category}
-                        className="w-20 h-20 object-contain mb-4 group-hover:scale-110 transition-transform duration-300"
-                      />
-                    )}
-                    <h3 className="font-semibold text-foreground capitalize group-hover:text-primary transition-colors">
-                      {category}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {categoryProducts.length} {t("common.items")}
-                    </p>
+                  <div className="h-80 rounded-3xl overflow-hidden card-premium transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl border-none relative group">
+                    {/* Background Gradient Overlay */}
+                    <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent opacity-60 z-10 group-hover:opacity-40 transition-opacity duration-500" />
+                    
+                    {/* Image Container */}
+                    <div className="w-full h-full p-8 flex items-center justify-center bg-white dark:bg-white/5">
+                      {displayImage && (
+                        <img
+                          src={displayImage}
+                          alt={category}
+                          className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-700 group-hover:scale-110"
+                        />
+                      )}
+                    </div>
+
+                    {/* Content Overlay */}
+                    <div className="absolute bottom-0 left-0 w-full p-6 z-20">
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <h3 className="text-xl font-bold text-foreground capitalize mb-2 group-hover:text-primary transition-colors">
+                            {category}
+                          </h3>
+                          <p className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                            <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs">
+                              {categoryProducts.length} {t("common.items")}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 shadow-lg">
+                          <FaArrowRight className={isRTL ? "rotate-180" : ""} />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </Link>
               );

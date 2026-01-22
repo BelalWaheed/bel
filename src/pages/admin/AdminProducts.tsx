@@ -92,12 +92,12 @@ export default function AdminProducts() {
                       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-2 sm:space-y-0">
                         <Link to={`/admin/products/view/${product.id}`}>
                           <Button size="sm" variant="outline" className="rounded-full hover:bg-secondary border-primary/20 hover:border-primary/50 text-foreground">
-                            {t("admin.view")}
+                            {t("common.view")}
                           </Button>
                         </Link>
                         <Link to={`/admin/products/edit/${product.id}`}>
                           <Button size="sm" variant="outline" className="rounded-full hover:bg-secondary border-yellow-500/20 hover:border-yellow-500/50 text-yellow-600 dark:text-yellow-400">
-                            {t("admin.edit")}
+                            {t("common.edit")}
                           </Button>
                         </Link>
                         <Button
@@ -105,7 +105,7 @@ export default function AdminProducts() {
                           onClick={() => deleteProduct(product.id)}
                           className="rounded-full bg-red-500 hover:bg-red-600 text-white"
                         >
-                          {t("admin.delete")}
+                          {t("common.delete")}
                         </Button>
                       </div>
                     </TableCell>

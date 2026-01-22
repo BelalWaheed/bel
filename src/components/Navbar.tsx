@@ -79,7 +79,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'}`}>
+    <header className={` transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'}`}>
       <nav 
         ref={navRef}
         className={`mx-auto max-w-7xl px-6 rounded-2xl transition-all duration-300 ${

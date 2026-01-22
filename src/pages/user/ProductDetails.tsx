@@ -92,7 +92,7 @@ export default function ProductDetails() {
         </Link>
 
         {/* Product Details Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+        <div className="grid grid-cols-1.5 md:grid-cols-2 lg:grid-cols-2 gap-12 mb-20">
           {/* Product Image */}
           <div className="space-y-4">
             <div
@@ -130,7 +130,7 @@ export default function ProductDetails() {
           <div className="flex flex-col">
             {/* Title & Rating */}
             <div className="mb-6">
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">
                 {product.title}
               </h1>
               <StarRating
@@ -142,13 +142,13 @@ export default function ProductDetails() {
 
             {/* Price */}
             <div className="mb-6">
-              <span className="text-4xl font-bold gradient-text">
+              <span className="text-2xl md:text-3xl lg:text-4xl font-bold gradient-text">
                 ${product.price}
               </span>
             </div>
 
             {/* Description */}
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8 flex-1">
+            <p className="text-muted-foreground  text-lg leading-relaxed mb-8 flex-1">
               {product.description}
             </p>
 

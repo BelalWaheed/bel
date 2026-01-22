@@ -91,19 +91,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           </h3>
 
           {/* Price */}
-          <div className="flex items-center justify-between mt-auto pt-3 border-t border-border">
+          <div className="flex items-center justify-center mt-auto pt-3 border-t border-border">
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold gradient-text">
                 ${product.price}
               </span>
             </div>
-            <button
-              onClick={handleAddToCart}
-              className="p-2 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-            >
-              <FaCartPlus className="text-sm" />
-            </button>
-          </div>
+           </div>
         </div>
       </div>
     </Link>

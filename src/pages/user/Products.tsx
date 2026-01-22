@@ -61,7 +61,7 @@ export default function Products() {
 
   return (
     <div className="min-h-screen py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-10/12 mx-auto">
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -76,11 +76,11 @@ export default function Products() {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
             <Button
-              variant={showFilters ? "default" : "outline"}
+              variant={showFilters ? "default" : "secondary"}
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 rounded-full"
             >
-              <FaFilter className="text-sm" />
+              <FaFilter className="text-sm " />
               {showFilters ? t("common.hideFilters") : t("common.showFilters")}
             </Button>
             
@@ -206,7 +206,7 @@ export default function Products() {
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 md:gap-6">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

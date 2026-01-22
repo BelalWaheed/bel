@@ -9,7 +9,6 @@ import { darkMode, lightMode } from "@/redux/userSlices/themeSlice";
 import { toggleLanguage } from "@/redux/userSlices/languageSlice";
 import { Button } from "@/components/ui/button";
 import UserProfileMenu from "./UserProfileMenu";
-import Logo from "./Logo";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Navbar() {
@@ -84,13 +83,25 @@ export default function Navbar() {
       >
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
+        <div className="flex  hover:cursor-pointer">
           <button
             onClick={() => handleNavigate("/")}
-            className="group"
+            className="group "
           >
-            <Logo size="md" showText className="hidden sm:flex" />
-            <Logo size="md" showText={false} className="sm:hidden" />
+            <div className="flex items-center">
+ <img
+      src="/hola-icon.png"
+      alt="Hola Fushion Logo"
+      className=" h-10 w-auto rounded-full"
+      />
+    <span className=" ml-2 font-bold text-lg text-foreground">
+      Hola Fushion
+    </span>
+      </div>
+
           </button>
+      </div>
+    
 
           {/* Center Nav Links - Desktop Only (above 768px) */}
           <div className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full px-2 py-1">

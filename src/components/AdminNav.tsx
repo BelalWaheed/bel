@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import { darkMode, lightMode } from "@/redux/userSlices/themeSlice";
 import { toggleLanguage } from "@/redux/userSlices/languageSlice";
 import UserProfileMenu from "./UserProfileMenu";
-import Logo from "./Logo";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminNav() {
@@ -101,16 +100,25 @@ export default function AdminNav() {
       >
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
-          <div className="flex items-center gap-4">
-            <button onClick={() => handleNavigate("/admin")} className="group flex items-center gap-3">
-              <Logo size="md" showText={false} />
-              <div className="flex flex-col items-start leading-none">
-                <span className="font-bold text-lg text-foreground">{t("common.adminPanel")}</span>
-                <span className="text-xs text-muted-foreground hidden sm:inline-block">Management System</span>
-              </div>
-            </button>
-          </div>
+          
+        <div className="flex  hover:cursor-pointer">
+          <button
+            onClick={() => handleNavigate("/")}
+            className="group "
+          >
+            <div className="flex items-center">
+ <img
+      src="/hola-icon.png"
+      alt="Hola Fushion Logo"
+      className=" h-10 w-auto rounded-full"
+      />
+    <span className=" ml-2 font-bold text-lg text-foreground">
+      Hola Fushion
+    </span>
+      </div>
 
+          </button>
+      </div>
           {/* Center Nav Links - Desktop Only */}
           <div className="hidden md:flex items-center gap-1 bg-secondary/50 rounded-full px-2 py-1">
             <button

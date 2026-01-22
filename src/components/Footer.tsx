@@ -11,7 +11,6 @@ import {
   FaGithub,
 } from "react-icons/fa";
 import { useTranslation } from "@/hooks/useTranslation";
-import Logo from "./Logo";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -29,7 +28,11 @@ export default function Footer() {
             {/* Brand Section */}
             <div className="space-y-6">
               <Link to="/">
-                <Logo size="md" />
+ <img
+      src="/hola-icon.png"
+      alt="Hola Fushion Logo"
+      className=" h-10 w-auto rounded-full"
+      />
               </Link>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 {t("footer.brandDescription")}

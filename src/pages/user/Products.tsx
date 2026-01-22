@@ -42,17 +42,6 @@ export default function Products() {
   const { products } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
 
-  // Filter states
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
-  const [showFilters, setShowFilters] = useState(false);
-
-  // Get unique categories from products
-  const categories = useMemo(() => {
-    const cats = [...new Set(products.map((p) => p.category))];
-    return ["all", ...cats];
-  }, [products]);
-
   // Get min and max prices
   const priceStats = useMemo(() => {
     if (products.length === 0) return { min: 0, max: 1000 };
@@ -62,6 +51,24 @@ export default function Products() {
       max: Math.ceil(Math.max(...prices)),
     };
   }, [products]);
+
+  // Filter states
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [priceRange, setPriceRange] = useState<[number, number]>([priceStats.min, priceStats.max]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceInitialized, setPriceInitialized] = useState(false);
+
+  // Get unique categories from products
+  const categories = useMemo(() => {
+    const cats = [...new Set(products.map((p) => p.category))];
+    return ["all", ...cats];
+  }, [products]);
+
+  // Initialize price range when products load
+  if (!priceInitialized && products.length > 0) {
+    setPriceRange([priceStats.min, priceStats.max]);
+    setPriceInitialized(true);
+  }
 
   // Filter products based on selected filters
   const filteredProducts = useMemo(() => {
@@ -163,6 +170,8 @@ export default function Products() {
                     className="w-full"
                   />
                   {/* Min Price */}
+                  <div className="flex items-center gap-2">
+
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Min Price</span>
                     <div className="flex items-center gap-2">
@@ -207,6 +216,7 @@ export default function Products() {
                         +
                       </button>
                     </div>
+                  </div>
                   </div>
                   
                 </div>

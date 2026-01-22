@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_URL;
 
-interface FetchOptions extends RequestInit {
+interface FetchOptions extends Omit<RequestInit, 'body'> {
   body?: BodyInit | Record<string, unknown> | null;
 }
 
@@ -8,17 +8,21 @@ async function fetchWithConfig<T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> {
+  const { body, ...restOptions } = options;
+  
   const config: RequestInit = {
     headers: {
       "Content-Type": "application/json",
       ...options.headers,
     },
-    ...options,
+    ...restOptions,
   };
 
   // If body is an object, stringify it
-  if (options.body && typeof options.body === "object" && !(options.body instanceof FormData)) {
-    config.body = JSON.stringify(options.body);
+  if (body && typeof body === "object" && !(body instanceof FormData)) {
+    config.body = JSON.stringify(body);
+  } else if (body) {
+    config.body = body as BodyInit;
   }
 
   const response = await fetch(`${API_URL}${endpoint}`, config);

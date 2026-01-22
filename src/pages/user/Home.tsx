@@ -15,6 +15,14 @@ export default function Home() {
   // Get categories
   const categories = [...new Set(products.map((p) => p.category))].slice(0, 4);
 
+  // Feature items with translations
+  const features = [
+    { icon: FaTruck, title: t("home.freeShipping"), desc: t("home.freeShippingDesc") },
+    { icon: FaShieldAlt, title: t("home.securePayment"), desc: t("home.securePaymentDesc") },
+    { icon: FaHeadset, title: t("home.support247"), desc: t("home.support247Desc") },
+    { icon: FaStar, title: t("home.premiumQuality"), desc: t("home.premiumQualityDesc") },
+  ];
+
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
@@ -31,19 +39,17 @@ export default function Home() {
           <div className={`space-y-6 ${isRTL ? 'lg:order-2' : ''}`}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
               <FaStar className="text-yellow-500" />
-              <span>{isRTL ? "مجموعة حصرية جديدة" : "New Exclusive Collection"}</span>
+              <span>{t("home.newCollection")}</span>
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              <span className="gradient-text">{isRTL ? "اكتشف" : "Discover"}</span>
+              <span className="gradient-text">{t("home.discover")}</span>
               <br />
-              <span className="text-foreground">{isRTL ? "أحدث الأزياء" : "Latest Fashion"}</span>
+              <span className="text-foreground">{t("home.latestFashion")}</span>
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-md">
-              {isRTL 
-                ? "تسوق أحدث تشكيلات الموضة بأسعار لا تُقاوم. منتجات حصرية بجودة عالية وتوصيل سريع."
-                : "Shop the latest fashion collections at unbeatable prices. Exclusive products with high quality and fast delivery."}
+              {t("home.heroDescription")}
             </p>
 
             <div className="flex flex-wrap gap-4 pt-4">
@@ -54,7 +60,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Button variant="outline" className="px-8 py-4 text-lg rounded-xl">
-                {isRTL ? "تعرف علينا" : "Learn More"}
+                {t("common.learnMore")}
               </Button>
             </div>
 
@@ -62,15 +68,15 @@ export default function Home() {
             <div className="flex flex-wrap gap-8 pt-8">
               <div>
                 <p className="text-3xl font-bold gradient-text">500+</p>
-                <p className="text-sm text-muted-foreground">{isRTL ? "منتج" : "Products"}</p>
+                <p className="text-sm text-muted-foreground">{t("common.products")}</p>
               </div>
               <div>
                 <p className="text-3xl font-bold gradient-text">10K+</p>
-                <p className="text-sm text-muted-foreground">{isRTL ? "عميل سعيد" : "Happy Customers"}</p>
+                <p className="text-sm text-muted-foreground">{t("home.happyCustomers")}</p>
               </div>
               <div>
                 <p className="text-3xl font-bold gradient-text">24/7</p>
-                <p className="text-sm text-muted-foreground">{isRTL ? "دعم فني" : "Support"}</p>
+                <p className="text-sm text-muted-foreground">{t("home.support")}</p>
               </div>
             </div>
           </div>
@@ -112,12 +118,7 @@ export default function Home() {
       <section className="py-16 border-y border-border">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: FaTruck, title: isRTL ? "شحن مجاني" : "Free Shipping", desc: isRTL ? "للطلبات فوق $50" : "On orders over $50" },
-              { icon: FaShieldAlt, title: isRTL ? "دفع آمن" : "Secure Payment", desc: isRTL ? "100% آمن" : "100% Secure" },
-              { icon: FaHeadset, title: isRTL ? "دعم 24/7" : "24/7 Support", desc: isRTL ? "دعم مباشر" : "Live Support" },
-              { icon: FaStar, title: isRTL ? "جودة عالية" : "Premium Quality", desc: isRTL ? "منتجات أصلية" : "Original Products" },
-            ].map((item, i) => (
+            {features.map((item, i) => (
               <div key={i} className="text-center group">
                 <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition-all duration-300">
                   <item.icon className="text-xl" />
@@ -136,15 +137,15 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-2">
-                <span className="gradient-text">{isRTL ? "منتجات مميزة" : "Featured Products"}</span>
+                <span className="gradient-text">{t("home.featuredProducts")}</span>
               </h2>
               <p className="text-muted-foreground">
-                {isRTL ? "اكتشف أفضل المنتجات المختارة لك" : "Discover our hand-picked selection for you"}
+                {t("home.featuredDesc")}
               </p>
             </div>
             <Link to="/products">
               <Button variant="outline" className="rounded-full group">
-                {isRTL ? "عرض الكل" : "View All"}
+                {t("common.viewAll")}
                 <FaArrowRight className={`mx-2 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
               </Button>
             </Link>
@@ -163,15 +164,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-2">
-              <span className="gradient-text">{isRTL ? "تسوق حسب الفئة" : "Shop by Category"}</span>
+              <span className="gradient-text">{t("home.shopByCategory")}</span>
             </h2>
             <p className="text-muted-foreground">
-              {isRTL ? "اختر من بين مجموعة متنوعة من الفئات" : "Choose from a variety of categories"}
+              {t("home.categoryDesc")}
             </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {categories.map((category, i) => {
+            {categories.map((category) => {
               const categoryProducts = products.filter(p => p.category === category);
               return (
                 <Link
@@ -191,7 +192,7 @@ export default function Home() {
                       {category}
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      {categoryProducts.length} {isRTL ? "منتج" : "items"}
+                      {categoryProducts.length} {t("common.items")}
                     </p>
                   </div>
                 </Link>
@@ -200,38 +201,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="relative overflow-hidden rounded-3xl gradient-primary p-12 md:p-20 text-center text-white">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
-            
-            <div className="relative">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">
-                {isRTL ? "اشترك في نشرتنا البريدية" : "Subscribe to Our Newsletter"}
-              </h2>
-              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                {isRTL 
-                  ? "احصل على أحدث العروض والخصومات الحصرية مباشرة في بريدك الإلكتروني"
-                  : "Get the latest offers and exclusive discounts directly in your inbox"}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder={isRTL ? "بريدك الإلكتروني" : "Your email address"}
-                  className="flex-1 px-6 py-4 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
-                />
-                <Button className="px-8 py-4 bg-white text-primary font-semibold rounded-xl hover:bg-white/90 transition-colors">
-                  {isRTL ? "اشترك" : "Subscribe"}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+ </div>
   );
 }

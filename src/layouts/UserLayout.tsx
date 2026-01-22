@@ -10,6 +10,7 @@ import Cart from "@/pages/user/Cart";
 import Login from "@/pages/user/Login";
 import SignUp from "@/pages/user/SignUp";
 import UserProfile from "@/pages/user/UserProfile";
+import CustomerService from "@/pages/user/CustomerService";
 import NotFound from "@/pages/user/NotFound";
 
 export default function UserLayout() {
@@ -26,6 +27,7 @@ export default function UserLayout() {
           <Route path="login" element={<Login />} />
           <Route path="sign-up" element={<SignUp />} />
           <Route path="profile" element={<UserProfile />} />
+          <Route path="customer-service" element={<CustomerService />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

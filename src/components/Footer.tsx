@@ -14,7 +14,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <footer className="relative overflow-hidden">
@@ -36,9 +36,7 @@ export default function Footer() {
                 </span>
               </Link>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {language === "ar" 
-                  ? "متجرك المفضل لأحدث صيحات الموضة. منتجات عالية الجودة بأسعار رائعة وخدمة استثنائية."
-                  : "Your one-stop shop for the latest trends in fashion. Quality products, great prices, and exceptional service."}
+                {t("footer.brandDescription")}
               </p>
               <div className="flex gap-3">
                 {[
@@ -61,7 +59,7 @@ export default function Footer() {
             {/* Quick Links */}
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-foreground">
-                {language === "ar" ? "روابط سريعة" : "Quick Links"}
+                {t("footer.quickLinks")}
               </h3>
               <ul className="space-y-3">
                 {[
@@ -85,22 +83,22 @@ export default function Footer() {
             {/* Customer Service */}
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-foreground">
-                {language === "ar" ? "خدمة العملاء" : "Customer Service"}
+                {t("footer.customerService")}
               </h3>
               <ul className="space-y-3">
                 {[
-                  { label: language === "ar" ? "الأسئلة الشائعة" : "FAQ", href: "#" },
-                  { label: language === "ar" ? "الشحن والإرجاع" : "Shipping & Returns", href: "#" },
-                  { label: t("footer.terms"), href: "#" },
-                  { label: t("footer.privacy"), href: "#" },
+                  { label: t("footer.faq"), to: "/customer-service#faq" },
+                  { label: t("footer.shippingReturns"), to: "/customer-service#shipping" },
+                  { label: t("footer.terms"), to: "/customer-service#terms" },
+                  { label: t("footer.privacy"), to: "/customer-service#privacy" },
                 ].map((link, i) => (
                   <li key={i}>
-                    <a
-                      href={link.href}
+                    <Link
+                      to={link.to}
                       className="text-muted-foreground hover:text-primary transition-colors animated-underline inline-block"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -113,7 +111,7 @@ export default function Footer() {
               </h3>
               <ul className="space-y-4">
                 {[
-                  { icon: HiOutlineLocationMarker, text: language === "ar" ? "١٢٣ شارع الأزياء، نيويورك" : "123 Fashion Street, NY 10001" },
+                  { icon: HiOutlineLocationMarker, text: t("footer.address") },
                   { icon: HiOutlinePhone, text: "+1 (555) 123-4567" },
                   { icon: HiOutlineMail, text: "support@holafushion.com" },
                 ].map((item, i) => (
@@ -136,9 +134,9 @@ export default function Footer() {
               </p>
               <div className="flex gap-6 text-sm text-muted-foreground">
                 {[
-                  { label: language === "ar" ? "الشروط" : "Terms", href: "#" },
-                  { label: language === "ar" ? "الخصوصية" : "Privacy", href: "#" },
-                  { label: language === "ar" ? "ملفات تعريف الارتباط" : "Cookies", href: "#" },
+                  { label: t("footer.bottomTerms"), href: "#" },
+                  { label: t("footer.bottomPrivacy"), href: "#" },
+                  { label: t("footer.cookies"), href: "#" },
                 ].map((link, i) => (
                   <a key={i} href={link.href} className="hover:text-primary transition-colors">
                     {link.label}

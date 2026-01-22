@@ -119,13 +119,20 @@ export default function Navbar() {
             >
               {t("common.shop")}
             </Link>
+            <Link
+              to="/customer-service"
+              onClick={handleLinkClick}
+              className="px-4 py-2 rounded-full text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-200"
+            >
+              {t("footer.customerService")}
+            </Link>
           </div>
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-2">
             {/* Cart */}
             <Link
-              to={logged ? "/cart" : "/login"}
+              to="/cart"
               onClick={handleLinkClick}
               className="relative p-2.5 rounded-full hover:bg-secondary transition-colors group"
             >
@@ -206,12 +213,19 @@ export default function Navbar() {
               >
                 {t("common.shop")}
               </Link>
+              <Link
+                to="/customer-service"
+                onClick={handleLinkClick}
+                className="px-4 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors"
+              >
+                {t("footer.customerService")}
+              </Link>
             </div>
 
             {/* Mobile Actions */}
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link
-                to={logged ? "/cart" : "/login"}
+                to="/cart"
                 onClick={handleLinkClick}
                 className="relative p-2.5 rounded-full hover:bg-secondary transition-colors"
               >

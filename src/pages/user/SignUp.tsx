@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import {
   resetUser,
@@ -11,7 +12,6 @@ import {
 import { setLogged, setLoggedUser } from "@/redux/userSlices/profileSlice";
 import { toggleUserChanged } from "@/redux/adminSlices/flagsSlice";
 import { userApi } from "@/lib/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FormErrors {
   name?: string;
@@ -35,29 +36,30 @@ export default function SignUp() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [errors, setErrors] = useState<FormErrors>({});
+  const { t } = useTranslation();
 
   const validate = () => {
     const newErrors: FormErrors = {};
 
-    if (!user.name.trim()) newErrors.name = "Name is required.";
+    if (!user.name.trim()) newErrors.name = t("auth.nameRequired");
 
     const emailExists = allUsers.some((u) => u.email === user.email);
     if (emailExists) {
-      newErrors.email = "This email is already registered.";
+      newErrors.email = t("auth.emailAlreadyRegistered");
     } else if (!user.email.trim()) {
-      newErrors.email = "Email is required.";
+      newErrors.email = t("auth.emailRequired");
     } else if (!/\S+@\S+\.\S+/.test(user.email)) {
-      newErrors.email = "Email format is invalid.";
+      newErrors.email = t("auth.invalidEmailFormat");
     }
 
     if (!user.gender || user.gender === "") {
-      newErrors.gender = "Please select a gender.";
+      newErrors.gender = t("auth.selectGender");
     }
 
     if (!user.password.trim()) {
-      newErrors.password = "Password is required.";
+      newErrors.password = t("auth.passwordRequired");
     } else if (user.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
+      newErrors.password = t("auth.passwordMinLength");
     }
 
     setErrors(newErrors);
@@ -82,56 +84,83 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex items-center pb-24 justify-center min-h-screen bg-linear-to-l from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] px-4">
-      <Card className="w-full max-w-md bg-white/80 dark:bg-white/5 dark:backdrop-blur-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">Sign Up</CardTitle>
-          <p className="mt-2 text-muted-foreground">
-            Nice to meet you! Enter your details to register.
-          </p>
-        </CardHeader>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      {/* Background decoration */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-accent/10 rounded-full blur-3xl" />
+      </div>
 
-        <CardContent>
+      <div className="relative w-full max-w-md">
+        {/* Card */}
+        <div className="card-premium p-8 glass">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <Link to="/" className="inline-flex items-center gap-2 mb-6">
+              <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-2xl">H</span>
+              </div>
+            </Link>
+            <h1 className="text-3xl font-bold mb-2">
+              <span className="gradient-text">{t("common.signUp")}</span>
+            </h1>
+            <p className="text-muted-foreground">
+              {t("auth.niceToMeet")}
+            </p>
+          </div>
+
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Your Name</Label>
-              <Input
-                id="name"
-                value={user.name}
-                onChange={(e) => dispatch(setName(e.target.value))}
-                placeholder="John Doe"
-              />
+              <Label htmlFor="name">{t("auth.yourName")}</Label>
+              <div className="relative">
+                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="name"
+                  value={user.name}
+                  onChange={(e) => dispatch(setName(e.target.value))}
+                  placeholder="John Doe"
+                  className="pl-10 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
+                />
+              </div>
               {errors.name && (
                 <p className="text-sm text-destructive">{errors.name}</p>
               )}
             </div>
 
+            {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">Your Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={user.email}
-                onChange={(e) => dispatch(setEmail(e.target.value))}
-                placeholder="you@example.com"
-              />
+              <Label htmlFor="email">{t("auth.yourEmail")}</Label>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  value={user.email}
+                  onChange={(e) => dispatch(setEmail(e.target.value))}
+                  placeholder="you@example.com"
+                  className="pl-10 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
+                />
+              </div>
               {errors.email && (
                 <p className="text-sm text-destructive">{errors.email}</p>
               )}
             </div>
 
+            {/* Gender */}
             <div className="space-y-2">
-              <Label>Your Gender</Label>
+              <Label>{t("auth.yourGender")}</Label>
               <Select
                 value={user.gender}
                 onValueChange={(value) => dispatch(setGender(value))}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select gender" />
+                <SelectTrigger className="h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary">
+                  <SelectValue placeholder={t("auth.selectGenderPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="male">{t("auth.male")}</SelectItem>
+                  <SelectItem value="female">{t("auth.female")}</SelectItem>
                 </SelectContent>
               </Select>
               {errors.gender && (
@@ -139,39 +168,46 @@ export default function SignUp() {
               )}
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={user.password}
-                onChange={(e) => dispatch(setPassword(e.target.value))}
-                placeholder="********"
-              />
+              <Label htmlFor="password">{t("auth.password")}</Label>
+              <div className="relative">
+                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type="password"
+                  value={user.password}
+                  onChange={(e) => dispatch(setPassword(e.target.value))}
+                  placeholder="********"
+                  className="pl-10 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
+                />
+              </div>
               {errors.password && (
                 <p className="text-sm text-destructive">{errors.password}</p>
               )}
             </div>
 
+            {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full bg-linear-to-r from-blue-700 to-purple-700 hover:from-blue-800 hover:to-purple-800 text-white"
+              className="btn-premium w-full h-12 text-white text-lg"
             >
-              Sign Up
+              {t("common.signUp")}
             </Button>
-
-            <p className="text-center text-muted-foreground">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="font-medium text-foreground underline"
-              >
-                Login
-              </Link>
-            </p>
           </form>
-        </CardContent>
-      </Card>
+
+          {/* Login Link */}
+          <p className="text-center text-muted-foreground mt-6">
+            {t("auth.haveAccount")}{" "}
+            <Link
+              to="/login"
+              className="font-semibold text-primary hover:underline"
+            >
+              {t("common.login")}
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

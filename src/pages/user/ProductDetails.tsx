@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { FaCartPlus, FaChevronLeft, FaChevronRight, FaHeart, FaShare } from "react-icons/fa";
+import { FaCartPlus, FaChevronLeft, FaChevronRight, FaCheck } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import { addProduct } from "@/redux/userSlices/productSlice";
 import { Button } from "@/components/ui/button";
@@ -36,18 +36,37 @@ const StarRating = ({ rating, count, reviewsLabel }: { rating: number; count?: n
 
 export default function ProductDetails() {
   const { productId } = useParams<{ productId: string }>();
-  const { products } = useAppSelector((state) => state.products);
+  const { products, cart } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
   const { t, isRTL } = useTranslation();
   const [isZoomed, setIsZoomed] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [justAdded, setJustAdded] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const product = products.find((p) => p.id === productId);
+  
+  // Check if product is in cart
+  const cartItem = cart.find((item) => item.id === productId);
+  const isInCart = !!cartItem;
 
   const handleAddToCart = (prod: Product, qty: number = 1) => {
     for (let i = 0; i < qty; i++) {
       dispatch(addProduct(prod));
     }
+    
+    // Show success state
+    setJustAdded(true);
+    setShowToast(true);
+    
+    // Reset after animation
+    setTimeout(() => {
+      setJustAdded(false);
+    }, 2000);
+    
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   // Get related products (same category, excluding current product)
@@ -80,7 +99,17 @@ export default function ProductDetails() {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-8 px-4 relative">
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in-0 slide-in-from-top-4 duration-300">
+          <div className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-500 text-white font-medium shadow-xl">
+            <FaCheck className="text-sm" />
+            {t("common.addedToCart")}
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <Link 
@@ -177,31 +206,61 @@ export default function ProductDetails() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  onClick={() => handleAddToCart(product, quantity)}
-                  className="btn-premium flex-1 py-4 text-white text-lg"
-                >
-                  <FaCartPlus className="mx-2" />
-                  {t("common.addToCart")}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="w-14 h-14 rounded-xl"
-                >
-                  <FaHeart className="text-lg" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="w-14 h-14 rounded-xl"
-                >
-                  <FaShare className="text-lg" />
-                </Button>
+              <div className="space-y-3">
+                {isInCart && !justAdded ? (
+                  // Product is in cart - show "In Cart" with quantity and option to add more
+                  <div className="flex  flex-row gap-3 items-center ">
+                    <div className="w-full py-4 text-lg bg-green-500/10 border border-green-500 text-green-600 dark:text-green-400 rounded-xl flex items-center justify-center gap-2 font-medium">
+                      <FaCheck />
+                      {t("common.inCart")} ({cartItem?.quantity})
+                    </div>
+                    <Button
+                      onClick={() => handleAddToCart(product, quantity)}
+                      className="btn-premium py-4 h-full text-white sm:px-8"
+                    >
+                      <FaCartPlus className="mx-1" />
+                      +{quantity}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => handleAddToCart(product, quantity)}
+                    disabled={justAdded}
+                    className={`w-full md:w-full py-4 text-lg transition-all duration-300 ${
+                      justAdded 
+                        ? "bg-green-500 hover:bg-green-500 text-white" 
+                        : "btn-premium text-white"
+                    }`}
+                  >
+                    {justAdded ? (
+                      <>
+                        <FaCheck className="mx-2 animate-in zoom-in-50 duration-200" />
+                        {t("common.addedToCart")}
+                      </>
+                    ) : (
+                      <>
+                        <FaCartPlus className="mx-2" />
+                        {t("common.addToCart")}
+                      </>
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Customer Service Link */}
+        <div className="mb-12 p-6 rounded-2xl bg-secondary/30 border border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="font-semibold text-foreground">{t("customerService.needHelp")}</h3>
+            <p className="text-sm text-muted-foreground">{t("customerService.helpDesc")}</p>
+          </div>
+          <Link to="/customer-service">
+            <Button variant="outline" className="rounded-xl whitespace-nowrap">
+              {t("footer.customerService")}
+            </Button>
+          </Link>
         </div>
 
         {/* Related Products Section */}

@@ -19,17 +19,17 @@ export default function Login() {
   const [errors, setErrors] = useState<FormErrors>({});
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
 
   const validate = () => {
     const newErrors: FormErrors = {};
 
     if (!user.email.trim()) {
-      newErrors.email = language === "ar" ? "البريد الإلكتروني مطلوب" : "Email is required";
+      newErrors.email = t("auth.emailRequired");
     }
 
     if (!user.password.trim()) {
-      newErrors.password = language === "ar" ? "كلمة المرور مطلوبة" : "Password is required";
+      newErrors.password = t("auth.passwordRequired");
     }
 
     setErrors(newErrors);
@@ -47,8 +47,8 @@ export default function Login() {
     if (!foundUser) {
       const emailExists = allUsers.find((u) => u.email === user.email);
       setErrors({
-        email: emailExists ? undefined : (language === "ar" ? "البريد الإلكتروني غير موجود" : "Email not found."),
-        password: emailExists ? (language === "ar" ? "كلمة المرور غير صحيحة" : "Incorrect password.") : undefined,
+        email: emailExists ? undefined : t("auth.emailNotFound"),
+        password: emailExists ? t("auth.incorrectPassword") : undefined,
       });
       return;
     }
@@ -83,9 +83,7 @@ export default function Login() {
               <span className="gradient-text">{t("common.login")}</span>
             </h1>
             <p className="text-muted-foreground">
-              {language === "ar" 
-                ? "مرحباً بعودتك! أدخل بياناتك للمتابعة."
-                : "Welcome back! Enter your credentials to continue."}
+              {t("auth.welcomeBack")}
             </p>
           </div>
 
@@ -101,7 +99,7 @@ export default function Login() {
                   type="email"
                   value={user.email}
                   onChange={(e) => dispatch(setEmail(e.target.value))}
-                  placeholder={language === "ar" ? "أدخل بريدك الإلكتروني" : "Enter your email"}
+                  placeholder={t("auth.enterEmail")}
                   className="pl-10 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -120,7 +118,7 @@ export default function Login() {
                   type="password"
                   value={user.password}
                   onChange={(e) => dispatch(setPassword(e.target.value))}
-                  placeholder={language === "ar" ? "أدخل كلمة المرور" : "Enter your password"}
+                  placeholder={t("auth.enterPassword")}
                   className="pl-10 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
                 />
               </div>

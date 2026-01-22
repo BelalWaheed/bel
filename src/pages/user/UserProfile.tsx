@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { HiEye, HiEyeOff } from "react-icons/hi";
+import { FaUser, FaEnvelope, FaLock, FaPen, FaCheck, FaArrowRight } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import {
   setEditLoggedUser,
   setName,
   setEmail,
   setPassword,
+  setLoggedUser,
 } from "@/redux/userSlices/profileSlice";
 import { toggleUserChanged } from "@/redux/adminSlices/flagsSlice";
 import { userApi } from "@/lib/api";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FormErrors {
   name?: string;
@@ -24,9 +27,12 @@ export default function UserProfile() {
   const { loggedUser, editLoggedUser } = useAppSelector((state) => state.profile);
   const { allUsers } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const { t, isRTL } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
   useEffect(() => {
@@ -45,16 +51,16 @@ export default function UserProfile() {
     const newErrors: FormErrors = {};
     const { name, email, password } = editLoggedUser;
 
-    if (!name.trim()) newErrors.name = "Name is required.";
-    if (!email.trim()) newErrors.email = "Email is required.";
-    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Invalid email.";
+    if (!name.trim()) newErrors.name = t("auth.nameRequired");
+    if (!email.trim()) newErrors.email = t("auth.emailRequired");
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = t("auth.invalidEmailFormat");
     else if (allUsers.some((u) => u.email === email && u.id !== loggedUser?.id)) {
-      newErrors.email = "This email is already registered.";
+      newErrors.email = t("auth.emailAlreadyRegistered");
     }
 
-    if (!password.trim()) newErrors.password = "Password is required.";
+    if (!password.trim()) newErrors.password = t("auth.passwordRequired");
     else if (password.length < 6)
-      newErrors.password = "Password must be at least 6 characters.";
+      newErrors.password = t("auth.passwordMinLength");
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -64,13 +70,24 @@ export default function UserProfile() {
     e.preventDefault();
     if (!validate() || !loggedUser) return;
 
+    setIsSaving(true);
     try {
-      await userApi.update(loggedUser.id, editLoggedUser);
+      const updatedUser = await userApi.update(loggedUser.id, editLoggedUser);
+      dispatch(setLoggedUser(updatedUser));
       dispatch(toggleUserChanged());
       setIsEditing(false);
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     } catch (error) {
       console.error("Error updating user:", error);
+    } finally {
+      setIsSaving(false);
     }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setErrors({});
   };
 
   const getAvatarUrl = () => {
@@ -81,127 +98,233 @@ export default function UserProfile() {
 
   if (!loggedUser) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-xl text-muted-foreground">Please log in to view your profile.</p>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="w-24 h-24 mx-auto rounded-full bg-secondary flex items-center justify-center mb-6">
+            <FaUser className="text-4xl text-muted-foreground" />
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-4">
+            {t("profile.loginRequired")}
+          </h2>
+          <Link to="/login">
+            <Button className="btn-premium px-8 py-4 text-white text-lg group">
+              {t("common.login")}
+              <FaArrowRight className={`mx-2 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-linear-to-l from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] px-4">
-      <Card className="w-full max-w-md bg-white/80 dark:bg-white/10 backdrop-blur-md">
-        <CardHeader className="flex flex-col items-center gap-3">
-          <Avatar className="h-16 w-16">
-            <AvatarImage src={getAvatarUrl()} alt={loggedUser.name} />
-            <AvatarFallback>{loggedUser.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <h2 className="text-2xl font-bold text-center">
-            {loggedUser.name} - Info
-          </h2>
-        </CardHeader>
+    <div className="min-h-screen py-12 px-4">
+      {/* Background decoration */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-accent/10 rounded-full blur-3xl" />
+      </div>
 
-        <CardContent>
-          <form className="space-y-6">
-            {/* Name */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="font-medium sm:w-1/3">Name:</label>
-              <div className="sm:w-2/3 w-full">
+      <div className="relative max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            <span className="gradient-text">{t("profile.title")}</span>
+          </h1>
+        </div>
+
+        {/* Profile Card */}
+        <div className="card-premium glass overflow-hidden">
+          {/* Avatar Section */}
+          <div className="relative bg-linear-to-br from-primary/20 to-accent/20 p-8 flex flex-col items-center">
+            <div className="relative">
+              <div className="w-28 h-28 rounded-full gradient-primary p-1 shadow-xl">
+                <Avatar className="w-full h-full">
+                  <AvatarImage src={getAvatarUrl()} alt={loggedUser.name} />
+                  <AvatarFallback className="text-3xl bg-card">
+                    {loggedUser.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              {!isEditing && (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                >
+                  <FaPen className="text-sm" />
+                </button>
+              )}
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mt-4">
+              {loggedUser.name}
+            </h2>
+            <p className="text-muted-foreground">{loggedUser.email}</p>
+          </div>
+
+          {/* Form Section */}
+          <div className="p-6 md:p-8">
+            <h3 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
+              <FaUser className="text-primary" />
+              {t("profile.personalInfo")}
+            </h3>
+
+            <form onSubmit={handleSave} className="space-y-5">
+              {/* Name Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  {t("profile.name")}
+                </label>
                 {isEditing ? (
-                  <div className="space-y-1">
+                  <div className="relative">
+                    <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       value={editLoggedUser.name}
                       onChange={(e) => dispatch(setName(e.target.value))}
-                      placeholder="Your name"
+                      className="pl-10 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
                     />
-                    {errors.name && (
-                      <p className="text-sm text-destructive">{errors.name}</p>
-                    )}
                   </div>
                 ) : (
-                  <span>{loggedUser.name}</span>
+                  <div className="h-12 px-4 rounded-xl bg-secondary/30 flex items-center text-foreground">
+                    {loggedUser.name}
+                  </div>
+                )}
+                {errors.name && (
+                  <p className="text-sm text-destructive">{errors.name}</p>
                 )}
               </div>
-            </div>
 
-            {/* Email */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="font-medium sm:w-1/3">Email:</label>
-              <div className="sm:w-2/3 w-full">
+              {/* Email Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  {t("profile.email")}
+                </label>
                 {isEditing ? (
-                  <div className="space-y-1">
+                  <div className="relative">
+                    <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <Input
+                      type="email"
                       value={editLoggedUser.email}
                       onChange={(e) => dispatch(setEmail(e.target.value))}
-                      placeholder="Your email"
+                      className="pl-10 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
                     />
-                    {errors.email && (
-                      <p className="text-sm text-destructive">{errors.email}</p>
-                    )}
                   </div>
                 ) : (
-                  <span className="truncate block">{loggedUser.email}</span>
+                  <div className="h-12 px-4 rounded-xl bg-secondary/30 flex items-center text-foreground">
+                    {loggedUser.email}
+                  </div>
+                )}
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email}</p>
                 )}
               </div>
-            </div>
 
-            {/* Password */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="font-medium sm:w-1/3">Password:</label>
-              <div className="sm:w-2/3 w-full flex items-center gap-2">
+              {/* Password Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  {t("profile.password")}
+                </label>
                 {isEditing ? (
-                  <div className="flex flex-col gap-1 w-full">
+                  <div className="relative">
+                    <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       type={showPassword ? "text" : "password"}
                       value={editLoggedUser.password}
                       onChange={(e) => dispatch(setPassword(e.target.value))}
-                      placeholder="Your password"
+                      className="pl-10 pr-12 h-12 rounded-xl bg-secondary/50 border-0 focus:ring-2 focus:ring-primary"
                     />
-                    {errors.password && (
-                      <p className="text-sm text-destructive">{errors.password}</p>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? <HiEyeOff className="text-xl" /> : <HiEye className="text-xl" />}
+                    </button>
                   </div>
                 ) : (
-                  <span className="tracking-widest">
-                    {showPassword ? loggedUser.password : "••••••••"}
-                  </span>
+                  <div className="h-12 px-4 rounded-xl bg-secondary/30 flex items-center justify-between text-foreground">
+                    <span className="tracking-widest">
+                      {showPassword ? loggedUser.password : "••••••••"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? <HiEyeOff className="text-xl" /> : <HiEye className="text-xl" />}
+                    </button>
+                  </div>
                 )}
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <HiEyeOff className="h-5 w-5" />
-                  ) : (
-                    <HiEye className="h-5 w-5" />
-                  )}
-                </Button>
+                {errors.password && (
+                  <p className="text-sm text-destructive">{errors.password}</p>
+                )}
               </div>
-            </div>
 
-            {/* Buttons */}
-            <div className="pt-6">
-              {isEditing ? (
-                <Button
-                  onClick={handleSave}
-                  className="w-full bg-linear-to-r from-blue-700 to-purple-700 hover:from-blue-800 hover:to-purple-800 text-white"
-                >
-                  Save
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  onClick={() => setIsEditing(true)}
-                  className="w-full bg-linear-to-r from-blue-700 to-purple-700 hover:from-blue-800 hover:to-purple-800 text-white"
-                >
-                  Edit Profile
-                </Button>
-              )}
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+              {/* Gender Display */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  {t("profile.gender")}
+                </label>
+                <div className="h-12 px-4 rounded-xl bg-secondary/30 flex items-center text-foreground capitalize">
+                  {loggedUser.gender === "male" ? t("profile.male") : t("profile.female")}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-4 flex gap-3">
+                {isEditing ? (
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleCancel}
+                      className="flex-1 h-12 rounded-xl"
+                      disabled={isSaving}
+                    >
+                      {t("profile.cancel")}
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isSaving}
+                      className="flex-1 btn-premium h-12 text-white"
+                    >
+                      {isSaving ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          {t("profile.saving")}
+                        </span>
+                      ) : (
+                        <>
+                          <FaCheck className="mx-2" />
+                          {t("profile.saveChanges")}
+                        </>
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    type="button"
+                    onClick={() => setIsEditing(true)}
+                    className="w-full btn-premium h-12 text-white"
+                  >
+                    <FaPen className="mx-2" />
+                    {t("profile.editProfile")}
+                  </Button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in-0 slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-500 text-white font-medium shadow-xl">
+            <FaCheck />
+            {t("profile.profileUpdated")}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -12,11 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function UserProfileMenu() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loggedUser } = useAppSelector((state) => state.profile);
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     localStorage.removeItem("userI");
@@ -60,14 +62,14 @@ export default function UserProfileMenu() {
         <DropdownMenuItem asChild>
           <Link to="/profile" className="cursor-pointer">
             <HiUser className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span>{t("common.profile")}</span>
           </Link>
         </DropdownMenuItem>
         {loggedUser?.role === "admin" && (
           <DropdownMenuItem asChild>
             <Link to="/admin" className="cursor-pointer">
               <HiCog className="mr-2 h-4 w-4" />
-              <span>Admin Dashboard</span>
+              <span>{t("common.adminDashboard")}</span>
             </Link>
           </DropdownMenuItem>
         )}
@@ -77,7 +79,7 @@ export default function UserProfileMenu() {
           className="cursor-pointer text-destructive focus:text-destructive"
         >
           <HiLogout className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          <span>{t("common.logout")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

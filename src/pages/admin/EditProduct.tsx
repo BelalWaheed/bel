@@ -9,6 +9,7 @@ import {
   setPrice,
   setRate,
   setTitle,
+  setGender,
   setViewProduct,
 } from "@/redux/userSlices/productSlice";
 import { toggleProductChanged } from "@/redux/adminSlices/flagsSlice";
@@ -17,11 +18,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/hooks/useTranslation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface FormErrors {
   title?: string;
   price?: string;
   category?: string;
+  gender?: string;
   description?: string;
   image?: string;
   rate?: string;
@@ -34,6 +44,7 @@ export default function EditProduct() {
   const { viewProduct } = useAppSelector((state) => state.products);
   const navigate = useNavigate();
   const [errors, setErrors] = useState<FormErrors>({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function getProductDetails() {
@@ -56,6 +67,7 @@ export default function EditProduct() {
       newErrors.price = "Valid price is required.";
     if (!viewProduct.category?.trim())
       newErrors.category = "Category is required.";
+    if (!viewProduct.gender?.trim()) newErrors.gender = "Gender is required.";
     if (!viewProduct.description?.trim())
       newErrors.description = "Description is required.";
     if (!viewProduct.image?.startsWith("https://"))
@@ -84,22 +96,23 @@ export default function EditProduct() {
 
   return (
     <div className="min-h-[calc(100vh-60px)] max-w-4xl md:mx-auto px-4 py-8 sm:mx-7">
-      <Card className="bg-white">
+      <Card className="card-premium">
         <CardHeader>
-          <CardTitle className="text-center text-gray-900">
-            Edit Product
+          <CardTitle className="text-center text-foreground text-2xl">
+            {t("admin.editProduct")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Product Title</Label>
+                <Label htmlFor="title">{t("admin.title")}</Label>
                 <Input
                   id="title"
                   value={viewProduct.title}
                   onChange={(e) => dispatch(setTitle(e.target.value))}
-                  placeholder="Product title"
+                  placeholder={t("admin.title")}
+                  className="bg-background"
                 />
                 {errors.title && (
                   <p className="text-sm text-destructive">{errors.title}</p>
@@ -107,13 +120,14 @@ export default function EditProduct() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="price">Product Price</Label>
+                <Label htmlFor="price">{t("admin.price")}</Label>
                 <Input
                   id="price"
                   type="number"
                   value={viewProduct.price}
                   onChange={(e) => dispatch(setPrice(Number(e.target.value)))}
                   placeholder="0.00"
+                  className="bg-background"
                 />
                 {errors.price && (
                   <p className="text-sm text-destructive">{errors.price}</p>
@@ -121,28 +135,56 @@ export default function EditProduct() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category">Product Category</Label>
-                <Input
-                  id="category"
+                <Label htmlFor="category">{t("admin.category")}</Label>
+                <Select
                   value={viewProduct.category}
-                  onChange={(e) => dispatch(setCategory(e.target.value))}
-                  placeholder="Category"
-                />
+                  onValueChange={(value) => dispatch(setCategory(value))}
+                >
+                  <SelectTrigger className="bg-background" id="category">
+                    <SelectValue placeholder={t("admin.category")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="jacket">Jacket</SelectItem>
+                    <SelectItem value="shirt">Shirt</SelectItem>
+                    <SelectItem value="pants">Pants</SelectItem>
+                    <SelectItem value="shoes">Shoes</SelectItem>
+                  </SelectContent>
+                </Select>
                 {errors.category && (
                   <p className="text-sm text-destructive">{errors.category}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="gender">Gender</Label>
+                <Select
+                  value={viewProduct.gender || ""} // Handle undefined gender
+                  onValueChange={(value) => dispatch(setGender(value))}
+                >
+                  <SelectTrigger className="bg-background" id="gender">
+                    <SelectValue placeholder="Select Gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="men">Men</SelectItem>
+                    <SelectItem value="women">Women</SelectItem>
+                    <SelectItem value="kids">Kids</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.gender && (
+                  <p className="text-sm text-destructive">{errors.gender}</p>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Product Description</Label>
+              <Label htmlFor="description">{t("admin.description")}</Label>
               <textarea
                 id="description"
                 value={viewProduct.description}
                 onChange={(e) => dispatch(setDescription(e.target.value))}
                 rows={4}
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Product description..."
+                placeholder={t("admin.description")}
               />
               {errors.description && (
                 <p className="text-sm text-destructive">{errors.description}</p>
@@ -150,13 +192,14 @@ export default function EditProduct() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="image">Product Image URL</Label>
+              <Label htmlFor="image">{t("admin.image")}</Label>
               <Input
                 id="image"
                 type="url"
                 value={viewProduct.image}
                 onChange={(e) => dispatch(setImage(e.target.value))}
                 placeholder="https://example.com/image.jpg"
+                className="bg-background"
               />
               {errors.image && (
                 <p className="text-sm text-destructive">{errors.image}</p>
@@ -165,7 +208,7 @@ export default function EditProduct() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="rate">Product Rate</Label>
+                <Label htmlFor="rate">Rate</Label>
                 <Input
                   id="rate"
                   type="number"
@@ -174,6 +217,7 @@ export default function EditProduct() {
                   value={viewProduct.rating?.rate}
                   onChange={(e) => dispatch(setRate(Number(e.target.value)))}
                   placeholder="0.0"
+                  className="bg-background"
                 />
                 {errors.rate && (
                   <p className="text-sm text-destructive">{errors.rate}</p>
@@ -181,13 +225,14 @@ export default function EditProduct() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="count">Rating Count</Label>
+                <Label htmlFor="count">Count</Label>
                 <Input
                   id="count"
                   type="number"
                   value={viewProduct.rating?.count}
                   onChange={(e) => dispatch(setCount(Number(e.target.value)))}
                   placeholder="0"
+                  className="bg-background"
                 />
                 {errors.count && (
                   <p className="text-sm text-destructive">{errors.count}</p>
@@ -198,9 +243,9 @@ export default function EditProduct() {
             <div className="flex justify-center">
               <Button
                 type="submit"
-                className="bg-primary text-primary-foreground font-bold px-6 py-3 rounded-md hover:bg-primary/90 transition"
+                className="btn-premium px-8 py-3 rounded-full font-bold"
               >
-                UPDATE PRODUCT
+                {t("admin.update")}
               </Button>
             </div>
           </form>

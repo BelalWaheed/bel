@@ -7,6 +7,7 @@ const initialState: AdminAddState = {
     title: "",
     price: 0,
     category: "",
+    gender: "",
     description: "",
     image: "",
     rating: {
@@ -32,6 +33,9 @@ const addSlice = createSlice({
     setCategory: (state, action: PayloadAction<string>) => {
       state.product.category = action.payload;
     },
+    setGender: (state, action: PayloadAction<string>) => {
+      state.product.gender = action.payload;
+    },
     setDescription: (state, action: PayloadAction<string>) => {
       state.product.description = action.payload;
     },
@@ -55,6 +59,7 @@ export const {
   setTitle,
   setPrice,
   setCategory,
+  setGender,
   setDescription,
   setImage,
   setRate,

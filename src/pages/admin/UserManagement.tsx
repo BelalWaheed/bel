@@ -12,61 +12,63 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function UserManagement() {
   const { allUsers } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const deleteUser = async (id: string, role: string) => {
     if (role === "admin") {
-      Swal.fire("Not Allowed", "You cannot delete an admin user.", "warning");
+      Swal.fire(t("admin.error"), t("admin.cannotDeleteAdmin"), "warning");
       return;
     }
 
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This user will be permanently deleted.",
+      title: t("admin.deleteConfirmTitle"),
+      text: t("admin.areYouSureUser"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
+      confirmButtonText: t("admin.yesDelete"),
+      cancelButtonText: t("admin.noCancel"),
     });
 
     if (result.isConfirmed) {
       try {
         await userApi.delete(id);
-        Swal.fire("Deleted!", "The user has been deleted.", "success");
+        Swal.fire(t("admin.deleted"), t("admin.userDeleted"), "success");
         dispatch(toggleUserChanged());
       } catch {
-        Swal.fire("Error", "Failed to delete user.", "error");
+        Swal.fire(t("admin.error"), "Failed to delete user.", "error");
       }
     } else {
-      Swal.fire("Cancelled", "The user is safe.", "info");
+      Swal.fire(t("admin.cancelled"), t("admin.safe"), "info");
     }
   };
 
   const makeAdmin = async (id: string, currentRole: string) => {
     if (currentRole === "admin") {
-      Swal.fire("Info", "This user is already an admin.", "info");
+      Swal.fire("Info", t("admin.alreadyAdmin"), "info");
       return;
     }
 
     const result = await Swal.fire({
-      title: "Make Admin?",
+      title: t("admin.makeAdmin"),
       text: "This user will have admin privileges.",
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#0d9488",
       cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, make admin!",
+      confirmButtonText: t("admin.makeAdmin"),
     });
 
     if (result.isConfirmed) {
       try {
         await userApi.update(id, { role: "admin" });
-        Swal.fire("Success!", "User is now an admin.", "success");
+        Swal.fire("Success!", t("admin.userPromoted"), "success");
         dispatch(toggleUserChanged());
       } catch {
         Swal.fire("Error", "Failed to update user role.", "error");
@@ -75,28 +77,25 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-tr from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white px-4 py-8">
+    <div className="min-h-screen px-4 py-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <header className="text-center">
-          <h1 className="text-3xl font-bold mb-2">All Users</h1>
-          <p className="text-gray-400 text-sm sm:text-base">
-            View and manage registered users
-          </p>
+          <h1 className="text-3xl font-bold mb-2 gradient-text">{t("admin.manageUsers")}</h1>
           <Link to="/admin/users/add">
-            <Button className="mt-7 backdrop-blur-sm bg-blue-400/20 hover:bg-blue-500/30 border border-blue-400 text-blue-200 px-5 py-2 rounded-full transition-all shadow-md">
-              Add New User
+            <Button className="mt-7 rounded-full btn-premium">
+              {t("admin.addNewUser")}
             </Button>
           </Link>
         </header>
 
-        <div className="overflow-auto scrollbar-hidden rounded-2xl shadow-lg ring-1 ring-gray-800 bg-[#1e293b]">
+        <div className="overflow-hidden rounded-2xl shadow-card bg-card border border-border">
           <Table>
-            <TableHeader className="bg-[#334155]">
-              <TableRow>
-                <TableHead className="text-gray-300">Username</TableHead>
-                <TableHead className="text-gray-300">Email</TableHead>
-                <TableHead className="text-gray-300">Role</TableHead>
-                <TableHead className="text-gray-300 text-center">Actions</TableHead>
+            <TableHeader className="bg-secondary/50">
+              <TableRow className="hover:bg-transparent border-border">
+                <TableHead className="text-muted-foreground">{t("admin.username")}</TableHead>
+                <TableHead className="text-muted-foreground">{t("admin.email")}</TableHead>
+                <TableHead className="text-muted-foreground">{t("admin.role")}</TableHead>
+                <TableHead className="text-muted-foreground text-center">{t("admin.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -104,18 +103,20 @@ export default function UserManagement() {
                 allUsers.map((user) => (
                   <TableRow
                     key={user.id}
-                    className="border-t border-gray-700 hover:bg-[#2d3b52]/70 transition-colors duration-150"
+                    className="border-t border-border hover:bg-secondary/20 transition-colors duration-150"
                   >
-                    <TableCell className="text-gray-100">{user.name}</TableCell>
-                    <TableCell className="text-gray-100">{user.email}</TableCell>
-                    <TableCell className="text-emerald-400 font-medium">
-                      {user.role}
+                    <TableCell className="text-foreground font-medium">{user.name}</TableCell>
+                    <TableCell className="text-foreground">{user.email}</TableCell>
+                    <TableCell className="text-emerald-500 font-medium">
+                      <span className={`px-2 py-1 rounded-full text-xs ${user.role === 'admin' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-secondary text-muted-foreground'}`}>
+                        {user.role}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap justify-center gap-2">
                         <Link to={`/admin/users/edit/${user.id}`}>
-                          <Button className="px-4 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium transition">
-                            Edit
+                          <Button size="sm" variant="outline" className="rounded-full hover:bg-secondary border-yellow-500/20 hover:border-yellow-500/50 text-yellow-600 dark:text-yellow-400">
+                             {t("admin.edit")}
                           </Button>
                         </Link>
                         <Button
@@ -124,11 +125,11 @@ export default function UserManagement() {
                           disabled={user.role === "admin"}
                           className={
                             user.role === "admin"
-                              ? "opacity-50 cursor-not-allowed"
-                              : "px-4 py-1.5 rounded-full bg-red-600 hover:bg-red-500 text-sm font-medium transition"
+                              ? "opacity-50 cursor-not-allowed hidden"
+                              : "rounded-full bg-red-500 hover:bg-red-600 text-white"
                           }
                         >
-                          Delete
+                          {t("admin.delete")}
                         </Button>
                         <Button
                           size="sm"
@@ -136,11 +137,11 @@ export default function UserManagement() {
                           disabled={user.role === "admin"}
                           className={
                             user.role === "admin"
-                              ? "opacity-50 cursor-not-allowed"
-                              : "px-4 py-1.5 rounded-full bg-teal-600 hover:bg-teal-500 text-white text-sm font-medium transition"
+                              ? "opacity-50 cursor-not-allowed hidden"
+                              : "rounded-full bg-teal-600 hover:bg-teal-700 text-white"
                           }
                         >
-                          Make Admin
+                          {t("admin.makeAdmin")}
                         </Button>
                       </div>
                     </TableCell>
@@ -148,8 +149,8 @@ export default function UserManagement() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="p-6 text-center text-gray-400">
-                    No users found.
+                  <TableCell colSpan={4} className="p-6 text-center text-muted-foreground">
+                    {t("admin.noUsers")}
                   </TableCell>
                 </TableRow>
               )}

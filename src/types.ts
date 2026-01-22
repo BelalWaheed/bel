@@ -32,6 +32,7 @@ export interface Product {
   price: number;
   description: string;
   category: string;
+  gender?: string;
   image: string;
   rating: ProductRating;
 }
@@ -46,6 +47,7 @@ export interface ViewProduct {
   price: number;
   description: string;
   category: string;
+  gender?: string;
   image: string;
   rating: ProductRating;
 }

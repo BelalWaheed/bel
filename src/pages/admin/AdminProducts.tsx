@@ -13,58 +13,60 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminProducts() {
   const { products } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const deleteProduct = async (id: string) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: t("admin.deleteConfirmTitle"),
+      text: t("admin.deleteConfirm"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: t("admin.yesDelete"),
+      cancelButtonText: t("admin.noCancel"),
     });
 
     if (result.isConfirmed) {
       try {
         await productApi.delete(id);
-        Swal.fire("Deleted!", "The product has been deleted.", "success");
+        Swal.fire(t("admin.deleted"), t("admin.productDeleted"), "success");
         dispatch(toggleProductChanged());
       } catch {
-        Swal.fire("Error", "Something went wrong while deleting.", "error");
+        Swal.fire(t("admin.error"), "Something went wrong while deleting.", "error");
       }
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire("Cancelled", "The product is safe :)", "info");
+      Swal.fire(t("admin.cancelled"), t("admin.safe"), "info");
     }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-tr from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white px-4 py-8">
+    <div className="min-h-screen px-4 py-8">
       <div className="max-w-7xl mx-auto space-y-8">
         <header className="text-center">
-          <h1 className="text-3xl font-bold mb-2">
-            Manage your products efficiently
+          <h1 className="text-3xl font-bold mb-2 gradient-text">
+            {t("admin.manageProducts")}
           </h1>
           <Link to="/admin/products/add">
-            <Button className="m-4 backdrop-blur-sm bg-blue-400/20 hover:bg-blue-500/30 border border-blue-400 text-blue-200 px-5 py-2 rounded-full transition-all shadow-md">
-              Add New Product
+            <Button className="mt-4 rounded-full btn-premium">
+              {t("admin.addNewProduct")}
             </Button>
           </Link>
         </header>
 
-        <div className="w-full overflow-auto scrollbar-hidden rounded-2xl shadow-lg ring-1 ring-gray-800 bg-linear-to-tr from-[#0f172a] via-[#1e293b] to-[#0f172a]">
+        <div className="w-full overflow-hidden rounded-2xl shadow-card bg-card border border-border">
           <Table>
-            <TableHeader className="bg-[#334155]">
-              <TableRow>
-                <TableHead className="text-gray-300">Image</TableHead>
-                <TableHead className="text-gray-300">Product</TableHead>
-                <TableHead className="text-gray-300">Price</TableHead>
-                <TableHead className="text-gray-300">Actions</TableHead>
+            <TableHeader className="bg-secondary/50">
+              <TableRow className="hover:bg-transparent border-border">
+                <TableHead className="text-muted-foreground">{t("admin.image")}</TableHead>
+                <TableHead className="text-muted-foreground">{t("admin.product")}</TableHead>
+                <TableHead className="text-muted-foreground">{t("admin.price")}</TableHead>
+                <TableHead className="text-muted-foreground">{t("admin.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -72,37 +74,38 @@ export default function AdminProducts() {
                 products.map((product) => (
                   <TableRow
                     key={product.id}
-                    className="border-t border-gray-700 hover:bg-[#2d3b52]/70 transition-colors duration-150"
+                    className="border-t border-border hover:bg-secondary/20 transition-colors duration-150"
                   >
                     <TableCell>
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={product.image} alt={product.title} />
+                      <Avatar className="h-12 w-12 bg-white p-1 shadow-sm">
+                        <AvatarImage src={product.image} alt={product.title} className="object-contain" />
                         <AvatarFallback>{product.title.charAt(0)}</AvatarFallback>
                       </Avatar>
                     </TableCell>
-                    <TableCell className="text-gray-100 max-w-xs truncate">
+                    <TableCell className="text-foreground max-w-xs truncate font-medium">
                       {product.title}
                     </TableCell>
-                    <TableCell className="text-green-400 font-semibold">
+                    <TableCell className="text-primary font-semibold">
                       ${product.price}
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-2 sm:space-y-0">
                         <Link to={`/admin/products/view/${product.id}`}>
-                          <Button className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-sm font-medium transition">
-                            View
+                          <Button size="sm" variant="outline" className="rounded-full hover:bg-secondary border-primary/20 hover:border-primary/50 text-foreground">
+                            {t("admin.view")}
                           </Button>
                         </Link>
                         <Link to={`/admin/products/edit/${product.id}`}>
-                          <Button className="px-4 py-1.5 rounded-full bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium transition">
-                            Edit
+                          <Button size="sm" variant="outline" className="rounded-full hover:bg-secondary border-yellow-500/20 hover:border-yellow-500/50 text-yellow-600 dark:text-yellow-400">
+                            {t("admin.edit")}
                           </Button>
                         </Link>
                         <Button
+                          size="sm"
                           onClick={() => deleteProduct(product.id)}
-                          className="px-4 py-1.5 rounded-full bg-red-600 hover:bg-red-500 text-sm font-medium transition"
+                          className="rounded-full bg-red-500 hover:bg-red-600 text-white"
                         >
-                          Delete
+                          {t("admin.delete")}
                         </Button>
                       </div>
                     </TableCell>
@@ -110,8 +113,8 @@ export default function AdminProducts() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="p-6 text-center text-gray-400">
-                    No products available.
+                  <TableCell colSpan={4} className="p-6 text-center text-muted-foreground">
+                    {t("admin.noProducts")}
                   </TableCell>
                 </TableRow>
               )}

@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FormErrors {
   name?: string;
@@ -34,29 +35,30 @@ export default function AddUser() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [errors, setErrors] = useState<FormErrors>({});
+  const { t } = useTranslation();
 
   const validate = () => {
     const newErrors: FormErrors = {};
 
-    if (!user.name.trim()) newErrors.name = "Name is required.";
+    if (!user.name.trim()) newErrors.name = t("auth.nameRequired");
 
     const emailExists = allUsers.some((u) => u.email === user.email);
     if (emailExists) {
-      newErrors.email = "This email is already registered.";
+      newErrors.email = t("auth.emailAlreadyRegistered");
     } else if (!user.email.trim()) {
-      newErrors.email = "Email is required.";
+      newErrors.email = t("auth.emailRequired");
     } else if (!/\S+@\S+\.\S+/.test(user.email)) {
-      newErrors.email = "Email format is invalid.";
+      newErrors.email = t("auth.invalidEmailFormat");
     }
 
     if (!user.gender || user.gender === "") {
-      newErrors.gender = "Please select a gender.";
+      newErrors.gender = t("auth.selectGender");
     }
 
     if (!user.password.trim()) {
-      newErrors.password = "Password is required.";
+      newErrors.password = t("auth.passwordRequired");
     } else if (user.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
+      newErrors.password = t("auth.passwordMinLength");
     }
 
     setErrors(newErrors);
@@ -78,98 +80,92 @@ export default function AddUser() {
   };
 
   return (
-    <div className="flex items-center pb-24 justify-center min-h-screen bg-linear-to-l from-[#0f172a] to-[#1e293b] px-4">
-      <Card className="w-full max-w-md bg-white/5 backdrop-blur-md border-gray-700">
+    <div className="flex items-center pb-24 justify-center min-h-[calc(100vh-60px)] px-4">
+      <Card className="w-full max-w-md card-premium">
         <CardHeader>
-          <CardTitle className="text-center text-white text-2xl">
-            Add User
+          <CardTitle className="text-center text-foreground text-2xl">
+            {t("admin.addNewUser")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-gray-200">
-                The Name
-              </Label>
+              <Label htmlFor="name">{t("common.name")}</Label>
               <Input
                 id="name"
                 value={user.name}
                 onChange={(e) => dispatch(setName(e.target.value))}
-                placeholder="John Doe"
-                className="bg-white/10 border-gray-600 text-white placeholder:text-gray-400"
+                placeholder={t("auth.yourName")}
+                className="bg-background"
               />
               {errors.name && (
-                <p className="text-sm text-red-400">{errors.name}</p>
+                <p className="text-sm text-destructive">{errors.name}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-200">
-                The Email
-              </Label>
+              <Label htmlFor="email">{t("common.email")}</Label>
               <Input
                 id="email"
                 type="email"
                 value={user.email}
                 onChange={(e) => dispatch(setEmail(e.target.value))}
-                placeholder="user@example.com"
-                className="bg-white/10 border-gray-600 text-white placeholder:text-gray-400"
+                placeholder={t("auth.yourEmail")}
+                className="bg-background"
               />
               {errors.email && (
-                <p className="text-sm text-red-400">{errors.email}</p>
+                <p className="text-sm text-destructive">{errors.email}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label className="text-gray-200">The Gender</Label>
+              <Label>{t("profile.gender")}</Label>
               <Select
                 value={user.gender}
                 onValueChange={(value) => dispatch(setGender(value))}
               >
-                <SelectTrigger className="bg-white/10 border-gray-600 text-white">
-                  <SelectValue placeholder="Select gender" />
+                <SelectTrigger className="bg-background">
+                  <SelectValue placeholder={t("auth.selectGenderPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="male">{t("profile.male")}</SelectItem>
+                  <SelectItem value="female">{t("profile.female")}</SelectItem>
                 </SelectContent>
               </Select>
               {errors.gender && (
-                <p className="text-sm text-red-400">{errors.gender}</p>
+                <p className="text-sm text-destructive">{errors.gender}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-200">
-                The Password
-              </Label>
+              <Label htmlFor="password">{t("common.password")}</Label>
               <Input
                 id="password"
                 type="password"
                 value={user.password}
                 onChange={(e) => dispatch(setPassword(e.target.value))}
                 placeholder="********"
-                className="bg-white/10 border-gray-600 text-white placeholder:text-gray-400"
+                className="bg-background"
               />
               {errors.password && (
-                <p className="text-sm text-red-400">{errors.password}</p>
+                <p className="text-sm text-destructive">{errors.password}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-linear-to-r from-blue-700 to-purple-700 hover:from-blue-800 hover:to-purple-800 text-white"
+              className="w-full btn-premium font-bold py-3 rounded-md"
             >
-              Add User
+              {t("admin.addNewUser")}
             </Button>
 
             <Link to="/admin/users">
               <Button
                 type="button"
                 variant="outline"
-                className="w-full mt-2 border-gray-600 text-white hover:bg-white/10"
+                className="w-full mt-2 border-input bg-background hover:bg-muted text-foreground"
               >
-                Go Back
+                {t("common.cancel")}
               </Button>
             </Link>
           </form>

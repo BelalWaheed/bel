@@ -14,7 +14,7 @@ import NotFound from "@/pages/user/NotFound";
 
 export default function AdminLayout() {
   return (
-    <div className="min-h-screen bg-linear-to-l from-[#0f172a] to-[#1e293b] transition-colors duration-300">
+    <div className="min-h-screen bg-background transition-colors duration-300">
       <AdminNav />
 
       <main className="min-h-[calc(100vh-80px)]">

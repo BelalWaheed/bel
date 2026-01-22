@@ -12,6 +12,7 @@ const initialState: ProductsState = {
     price: 0,
     description: "",
     category: "",
+    gender: "",
     image: "",
     rating: {
       rate: 0,
@@ -74,6 +75,9 @@ const productsSlice = createSlice({
     setCategory: (state, action: PayloadAction<string>) => {
       state.viewProduct.category = action.payload;
     },
+    setGender: (state, action: PayloadAction<string>) => {
+      state.viewProduct.gender = action.payload;
+    },
     setDescription: (state, action: PayloadAction<string>) => {
       state.viewProduct.description = action.payload;
     },
@@ -104,6 +108,7 @@ export const {
   setTitle,
   setPrice,
   setCategory,
+  setGender,
   setDescription,
   setImage,
   setRate,

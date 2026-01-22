@@ -25,8 +25,10 @@ export default function Products() {
   }, [products]);
 
   // Filter states
+  // Filter states
   const initialCategory = searchParams.get("category") || "all";
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
+  const [selectedGender, setSelectedGender] = useState<string>("all");
   const [priceRange, setPriceRange] = useState<[number, number]>([priceStats.min, priceStats.max]);
   const [showFilters, setShowFilters] = useState(initialCategory !== "all");
   const [priceInitialized, setPriceInitialized] = useState(false);
@@ -57,19 +59,23 @@ export default function Products() {
     return products.filter((product) => {
       const matchesCategory =
         selectedCategory === "all" || product.category === selectedCategory;
+      const matchesGender =
+        selectedGender === "all" || product.gender?.toLowerCase() === selectedGender.toLowerCase();
       const matchesPrice =
         product.price >= priceRange[0] && product.price <= priceRange[1];
-      return matchesCategory && matchesPrice;
+      return matchesCategory && matchesPrice && matchesGender;
     });
-  }, [products, selectedCategory, priceRange]);
+  }, [products, selectedCategory, priceRange, selectedGender]);
 
   const resetFilters = () => {
     setSelectedCategory("all");
+    setSelectedGender("all");
     setPriceRange([priceStats.min, priceStats.max]);
   };
 
   const hasActiveFilters =
     selectedCategory !== "all" ||
+    selectedGender !== "all" ||
     priceRange[0] !== priceStats.min ||
     priceRange[1] !== priceStats.max;
 
@@ -82,13 +88,32 @@ export default function Products() {
       />
       <div className="xl:max-w-10/12 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="gradient-text">{t("common.ourProducts")}</span>
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl">
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
             {t("common.tryAdjustingFilters")}
           </p>
+          
+          {/* Gender Tabs */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex p-1 bg-secondary rounded-xl shadow-inner">
+              {["all", "men", "women", "kids"].map((gender) => (
+                <button
+                  key={gender}
+                  onClick={() => setSelectedGender(gender)}
+                  className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                    selectedGender === gender
+                      ? "bg-primary text-primary-foreground shadow-md"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Filter Bar */}

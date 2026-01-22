@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaPlus, FaMinus, FaTrash } from "react-icons/fa6";
+import { FaPlus, FaMinus, FaTrash, FaArrowRight, FaCartShopping } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import {
   increaseN,
   decreaseN,
   removeFromCart,
 } from "@/redux/userSlices/productSlice";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { CartItem } from "@/types";
@@ -15,7 +14,7 @@ import type { CartItem } from "@/types";
 export default function Cart() {
   const { cart } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
-  const { t, language } = useTranslation();
+  const { t, language, isRTL } = useTranslation();
 
   const [toast, setToast] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -87,123 +86,152 @@ export default function Cart() {
   };
 
   return (
-    <div className="p-4 sm:p-6 min-h-screen bg-linear-to-l from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] text-foreground relative">
-      <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-10 text-center">
-        {t("cart.yourCart")}
-      </h2>
-
-      {cart.length === 0 ? (
-        <div className="flex flex-col justify-center items-center h-72 gap-6 text-center">
-          <p className="text-xl sm:text-2xl font-bold text-pink-700 dark:text-pink-300">
-            {t("cart.emptyCart")}
+    <div className="min-h-screen py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-10">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2">
+            <span className="gradient-text">{t("cart.yourCart")}</span>
+          </h1>
+          <p className="text-muted-foreground">
+            {cart.length} {language === "ar" ? "منتج" : "items"}
           </p>
-          <Link to="/products">
-            <Button className="px-6 py-3 bg-primary text-primary-foreground">
-              {t("common.shop")}
-            </Button>
-          </Link>
         </div>
-      ) : (
-        <div className="flex flex-col lg:flex-row justify-between gap-6 sm:gap-10 max-w-7xl mx-auto px-2 sm:px-4">
-          {/* Cart Items */}
-          <div className="flex-1 space-y-4 sm:space-y-6">
-            {cart.map((product) => (
-              <Card
-                key={product.id}
-                className="flex flex-col sm:flex-row items-center justify-between p-3 sm:p-4 gap-4 bg-white dark:bg-[#1e293b] shadow-md"
-              >
-                <div className="flex items-center gap-4 w-full sm:w-1/2">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
-                  />
-                  <span className="font-semibold text-sm">
-                    {product.title}
-                  </span>
-                </div>
 
-                <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 w-full sm:w-1/2">
-                  <span className="text-sm font-medium whitespace-nowrap">
-                    ${product.price.toFixed(2)}
-                  </span>
-
-                  <div className="flex items-center gap-2">
-                    <Button
-                      onClick={() => dispatch(decreaseN({ id: product.id }))}
-                      size="sm"
-                      variant="secondary"
-                      className="p-2"
-                    >
-                      <FaMinus />
-                    </Button>
-                    <span className="text-primary font-semibold">
-                      {product.quantity}
-                    </span>
-                    <Button
-                      onClick={() => dispatch(increaseN({ id: product.id }))}
-                      size="sm"
-                      variant="secondary"
-                      className="p-2"
-                    >
-                      <FaPlus />
-                    </Button>
+        {cart.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="w-32 h-32 rounded-full bg-secondary flex items-center justify-center mb-6">
+              <FaCartShopping className="text-5xl text-muted-foreground" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">
+              {t("cart.emptyCart")}
+            </h2>
+            <p className="text-muted-foreground mb-6 max-w-md">
+              {language === "ar" 
+                ? "لم تضف أي منتجات إلى سلتك بعد. استكشف منتجاتنا واكتشف ما يناسبك!"
+                : "You haven't added any products to your cart yet. Explore our products and find what suits you!"}
+            </p>
+            <Link to="/products">
+              <Button className="btn-premium px-8 py-4 text-white text-lg group">
+                {t("common.shop")}
+                <FaArrowRight className={`mx-2 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Cart Items */}
+            <div className="lg:col-span-2 space-y-4">
+              {cart.map((product) => (
+                <div
+                  key={product.id}
+                  className="card-premium p-4 flex flex-col sm:flex-row items-center gap-4"
+                >
+                  {/* Image */}
+                  <div className="w-24 h-24 rounded-xl bg-secondary/50 shrink-0 overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-full object-contain p-2"
+                    />
                   </div>
 
-                  <span className="text-red-700 dark:text-red-400 font-semibold whitespace-nowrap">
-                    ${(product.price * product.quantity).toFixed(2)}
-                  </span>
+                  {/* Details */}
+                  <div className="flex-1 min-w-0 text-center sm:text-start">
+                    <h3 className="font-semibold text-foreground line-clamp-1 mb-1">
+                      {product.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      ${product.price.toFixed(2)} × {product.quantity}
+                    </p>
+                  </div>
 
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => dispatch(removeFromCart({ id: product.id }))}
-                    className="rounded-full p-2"
-                  >
-                    <FaTrash className="text-sm" />
-                  </Button>
+                  {/* Quantity Controls */}
+                  <div className="flex items-center gap-2 rounded-xl bg-secondary overflow-hidden">
+                    <button
+                      onClick={() => dispatch(decreaseN({ id: product.id }))}
+                      className="p-3 hover:bg-primary/10 transition-colors"
+                    >
+                      <FaMinus className="text-sm" />
+                    </button>
+                    <span className="px-3 font-semibold min-w-[40px] text-center">
+                      {product.quantity}
+                    </span>
+                    <button
+                      onClick={() => dispatch(increaseN({ id: product.id }))}
+                      className="p-3 hover:bg-primary/10 transition-colors"
+                    >
+                      <FaPlus className="text-sm" />
+                    </button>
+                  </div>
+
+                  {/* Price & Delete */}
+                  <div className="flex items-center gap-4">
+                    <span className="font-bold text-lg gradient-text min-w-[80px] text-end">
+                      ${(product.price * product.quantity).toFixed(2)}
+                    </span>
+                    <button
+                      onClick={() => dispatch(removeFromCart({ id: product.id }))}
+                      className="p-3 rounded-xl text-destructive hover:bg-destructive/10 transition-colors"
+                    >
+                      <FaTrash className="text-sm" />
+                    </button>
+                  </div>
                 </div>
-              </Card>
-            ))}
-          </div>
-
-          {/* Summary */}
-          <div className="w-full lg:w-1/3 bg-white dark:bg-[#1e293b] shadow-md rounded-lg p-4 sm:p-6 h-fit">
-            <h3 className="text-xl font-bold mb-4">
-              {language === "ar" ? "الملخص" : "Summary"}
-            </h3>
-            <div className="space-y-3 text-sm text-muted-foreground">
-              <div className="flex justify-between">
-                <span>{language === "ar" ? "المجموع الفرعي" : "Subtotal"}</span>
-                <span>${subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>{language === "ar" ? "الضرائب" : "Taxes"} (14%)</span>
-                <span>${taxes.toFixed(2)}</span>
-              </div>
-              <hr className="my-2 border-border" />
-              <div className="flex justify-between font-semibold text-lg text-foreground">
-                <span>{t("cart.total")}</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
+              ))}
             </div>
 
-            <Button
-              onClick={handleCheckout}
-              className="w-full mt-6 py-3 bg-red-700 hover:bg-red-800 text-white font-semibold text-sm hover:scale-105 transition"
-            >
-              {t("cart.checkout")}
-            </Button>
-          </div>
-        </div>
-      )}
+            {/* Order Summary */}
+            <div className="lg:col-span-1">
+              <div className="card-premium p-6 sticky top-24">
+                <h3 className="text-xl font-bold mb-6">
+                  {language === "ar" ? "ملخص الطلب" : "Order Summary"}
+                </h3>
 
-      {/* Toast Notification */}
-      {showToast && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded shadow-lg z-50 animate-pulse">
-          {toast}
-        </div>
-      )}
+                <div className="space-y-4 mb-6">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>{language === "ar" ? "المجموع الفرعي" : "Subtotal"}</span>
+                    <span>${subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>{language === "ar" ? "الضرائب" : "Taxes"} (14%)</span>
+                    <span>${taxes.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>{language === "ar" ? "الشحن" : "Shipping"}</span>
+                    <span className="text-primary font-medium">{language === "ar" ? "مجاني" : "Free"}</span>
+                  </div>
+                  <hr className="border-border" />
+                  <div className="flex justify-between text-xl font-bold">
+                    <span>{t("cart.total")}</span>
+                    <span className="gradient-text">${total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleCheckout}
+                  className="btn-premium w-full py-4 text-white text-lg"
+                >
+                  {t("cart.checkout")}
+                </Button>
+
+                <Link to="/products" className="block mt-4">
+                  <Button variant="outline" className="w-full rounded-xl">
+                    {t("cart.continueShopping")}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Toast Notification */}
+        {showToast && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 gradient-primary text-white px-6 py-4 rounded-xl shadow-xl z-50 animate-in slide-in-from-bottom-4 duration-300">
+            {toast}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

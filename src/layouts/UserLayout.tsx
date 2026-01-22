@@ -14,7 +14,7 @@ import NotFound from "@/pages/user/NotFound";
 
 export default function UserLayout() {
   return (
-    <div className="min-h-screen bg-linear-to-l from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] transition-colors duration-300">
+    <div className="min-h-screen bg-background transition-colors duration-300">
       <Navbar />
 
       <main className="min-h-[calc(100vh-200px)]">

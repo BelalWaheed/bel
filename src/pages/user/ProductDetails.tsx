@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaCartPlus, FaChevronLeft, FaChevronRight, FaHeart, FaShare } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import { addProduct } from "@/redux/userSlices/productSlice";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ProductCard from "@/components/ProductCard";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { Product } from "@/types";
 
 // Star Rating Component
 const StarRating = ({ rating, count, reviewsLabel }: { rating: number; count?: number; reviewsLabel?: string }) => (
   <div className="flex items-center gap-2">
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {[...Array(5)].map((_, i) => (
         <svg
           key={i}
@@ -19,15 +19,12 @@ const StarRating = ({ rating, count, reviewsLabel }: { rating: number; count?: n
           viewBox="0 0 16 16"
           fill={i < rating ? "currentColor" : "none"}
           stroke="currentColor"
-          className={`size-5 ${
-            i < rating ? "text-yellow-500" : "text-gray-400 dark:text-gray-600"
+          strokeWidth={1}
+          className={`w-5 h-5 ${
+            i < rating ? "text-amber-400" : "text-gray-300 dark:text-gray-600"
           }`}
         >
-          <path
-            fillRule="evenodd"
-            d="M8 1.75a.75.75 0 0 1 .692.462l1.41 3.393 3.664.293a.75.75 0 0 1 .428 1.317l-2.791 2.39.853 3.575a.75.75 0 0 1-1.12.814L7.998 12.08l-3.135 1.915a.75.75 0 0 1-1.12-.814l.852-3.574-2.79-2.39a.75.75 0 0 1 .427-1.318l3.663-.293 1.41-3.393A.75.75 0 0 1 8 1.75Z"
-            clipRule="evenodd"
-          />
+          <path d="M8 1.75a.75.75 0 0 1 .692.462l1.41 3.393 3.664.293a.75.75 0 0 1 .428 1.317l-2.791 2.39.853 3.575a.75.75 0 0 1-1.12.814L7.998 12.08l-3.135 1.915a.75.75 0 0 1-1.12-.814l.852-3.574-2.79-2.39a.75.75 0 0 1 .427-1.318l3.663-.293 1.41-3.393A.75.75 0 0 1 8 1.75Z" />
         </svg>
       ))}
     </div>
@@ -35,58 +32,6 @@ const StarRating = ({ rating, count, reviewsLabel }: { rating: number; count?: n
       <span className="text-muted-foreground text-sm">({count} {reviewsLabel || "reviews"})</span>
     )}
   </div>
-);
-
-// Product Card Component for Related Products
-const ProductCard = ({
-  product,
-  onAddToCart,
-}: {
-  product: Product;
-  onAddToCart: (product: Product) => void;
-}) => (
-  <Link to={`/products/${product.id}`}>
-    <Card className="h-full flex flex-col cursor-pointer dark:bg-[#1e293b] bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
-      <CardHeader className="relative h-48 p-4 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center">
-        <img
-          src={product.image}
-          alt={product.title}
-          loading="lazy"
-          className="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110"
-          onError={(e) => {
-            e.currentTarget.src = "https://via.placeholder.com/300x300?text=No+Image";
-          }}
-        />
-      </CardHeader>
-
-      <CardContent className="flex-1 p-4">
-        <h3 className="text-foreground font-semibold line-clamp-2 text-sm">
-          {product.title}
-        </h3>
-        <div className="mt-2">
-          <StarRating rating={Math.floor(product.rating.rate)} />
-        </div>
-      </CardContent>
-
-      <CardFooter className="p-4 pt-0 flex justify-between items-center">
-        <span className="text-red-700 dark:text-red-400 text-lg font-bold">
-          ${product.price}
-        </span>
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onAddToCart(product);
-          }}
-          variant="secondary"
-          size="sm"
-          className="rounded-full hover:scale-105 transition-transform"
-        >
-          <FaCartPlus className="text-base" />
-        </Button>
-      </CardFooter>
-    </Card>
-  </Link>
 );
 
 export default function ProductDetails() {
@@ -117,11 +62,14 @@ export default function ProductDetails() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
+          <div className="w-24 h-24 mx-auto rounded-full bg-secondary flex items-center justify-center mb-6">
+            <span className="text-4xl">🔍</span>
+          </div>
           <h1 className="text-3xl font-bold text-foreground mb-4">
             {t("common.productNotFound")}
           </h1>
           <Link to="/products">
-            <Button variant="outline">
+            <Button className="btn-premium text-white px-6 py-3">
               <BackIcon className="mx-2" />
               {t("common.backToProducts")}
             </Button>
@@ -134,35 +82,44 @@ export default function ProductDetails() {
   return (
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Back Button */}
-        <Link to="/products" className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors mb-8">
-          <BackIcon className="mx-2" />
-          {t("common.backToProducts")}
+        {/* Breadcrumb */}
+        <Link 
+          to="/products" 
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 group"
+        >
+          <BackIcon className="text-sm group-hover:-translate-x-1 transition-transform" />
+          <span>{t("common.backToProducts")}</span>
         </Link>
 
         {/* Product Details Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          {/* Product Image with Zoom */}
-          <div className="flex items-center justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+          {/* Product Image */}
+          <div className="space-y-4">
             <div
-              className={`relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl overflow-hidden cursor-zoom-in transition-all duration-300 ${
-                isZoomed ? "scale-100" : ""
+              className={`relative card-premium aspect-square overflow-hidden cursor-zoom-in transition-all duration-300 ${
+                isZoomed ? "shadow-glow" : ""
               }`}
               onClick={() => setIsZoomed(!isZoomed)}
               onMouseLeave={() => setIsZoomed(false)}
             >
+              {/* Category Badge */}
+              <span className="absolute top-4 left-4 z-10 px-4 py-1.5 text-sm font-medium rounded-full gradient-primary text-white capitalize">
+                {product.category}
+              </span>
+
               <img
                 src={product.image}
                 alt={product.title}
-                className={`max-w-full max-h-[500px] object-contain transition-transform duration-500 ${
-                  isZoomed ? "scale-150" : "hover:scale-110"
+                className={`w-full h-full object-contain p-8 transition-transform duration-500 ${
+                  isZoomed ? "scale-150" : "hover:scale-105"
                 }`}
                 onError={(e) => {
                   e.currentTarget.src = "https://via.placeholder.com/500x500?text=No+Image";
                 }}
               />
+              
               {!isZoomed && (
-                <div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-black/60 text-white text-xs backdrop-blur-sm">
                   {t("common.clickToZoom")}
                 </div>
               )}
@@ -170,16 +127,12 @@ export default function ProductDetails() {
           </div>
 
           {/* Product Info */}
-          <div className="flex flex-col justify-center">
-            <span className="text-sm font-medium text-primary uppercase tracking-wider mb-2">
-              {product.category}
-            </span>
-
-            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              {product.title}
-            </h1>
-
+          <div className="flex flex-col">
+            {/* Title & Rating */}
             <div className="mb-6">
+              <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+                {product.title}
+              </h1>
               <StarRating
                 rating={Math.floor(product.rating.rate)}
                 count={product.rating.count}
@@ -187,63 +140,79 @@ export default function ProductDetails() {
               />
             </div>
 
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              {product.description}
-            </p>
-
-            <div className="flex items-center gap-4 mb-8">
-              <span className="text-4xl font-bold text-red-700 dark:text-red-400">
+            {/* Price */}
+            <div className="mb-6">
+              <span className="text-4xl font-bold gradient-text">
                 ${product.price}
               </span>
             </div>
 
-            {/* Quantity Selector */}
-            <div className="flex items-center gap-4 mb-8">
-              <span className="text-foreground font-medium">{t("common.quantity")}:</span>
-              <div className="flex items-center border border-border rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-2 hover:bg-muted transition-colors"
+            {/* Description */}
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8 flex-1">
+              {product.description}
+            </p>
+
+            {/* Quantity & Add to Cart */}
+            <div className="space-y-4 pt-6 border-t border-border">
+              {/* Quantity Selector */}
+              <div className="flex items-center gap-4">
+                <span className="text-foreground font-medium">{t("common.quantity")}:</span>
+                <div className="flex items-center rounded-xl bg-secondary overflow-hidden">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="px-4 py-3 hover:bg-primary/10 transition-colors font-medium"
+                  >
+                    −
+                  </button>
+                  <span className="px-6 py-3 font-semibold min-w-[60px] text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="px-4 py-3 hover:bg-primary/10 transition-colors font-medium"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  onClick={() => handleAddToCart(product, quantity)}
+                  className="btn-premium flex-1 py-4 text-white text-lg"
                 >
-                  -
-                </button>
-                <span className="px-6 py-2 border-x border-border font-medium">
-                  {quantity}
-                </span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-2 hover:bg-muted transition-colors"
+                  <FaCartPlus className="mx-2" />
+                  {t("common.addToCart")}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-14 h-14 rounded-xl"
                 >
-                  +
-                </button>
+                  <FaHeart className="text-lg" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-14 h-14 rounded-xl"
+                >
+                  <FaShare className="text-lg" />
+                </Button>
               </div>
             </div>
-
-            {/* Add to Cart Button */}
-            <Button
-              onClick={() => handleAddToCart(product, quantity)}
-              size="lg"
-              className="w-full md:w-auto bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              <FaCartPlus className="mx-2 text-xl" />
-              {t("common.addToCart")}
-            </Button>
           </div>
         </div>
 
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-foreground mb-8">
-              {t("common.relatedProducts")}
+            <h2 className="text-2xl md:text-3xl font-bold mb-8">
+              <span className="gradient-text">{t("common.relatedProducts")}</span>
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relatedProduct) => (
-                <ProductCard
-                  key={relatedProduct.id}
-                  product={relatedProduct}
-                  onAddToCart={handleAddToCart}
-                />
+                <ProductCard key={relatedProduct.id} product={relatedProduct} />
               ))}
             </div>
           </section>

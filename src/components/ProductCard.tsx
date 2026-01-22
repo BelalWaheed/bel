@@ -86,17 +86,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Title */}
-          <h3 className="font-semibold text-foreground line-clamp-2 mb-2 group-hover:text-primary transition-colors text-sm md:text-base">
+          <h3 className="font-semibold text-foreground line-clamp-1 md:line-clamp-2 mb-2 group-hover:text-primary transition-colors text-sm md:text-base">
             {product.title}
           </h3>
 
           {/* Price */}
           <div className="flex items-center justify-center mt-auto pt-3 border-t border-border">
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold gradient-text">
+              <span className="text-xl md:text-2xl font-bold gradient-text">
                 ${product.price}
               </span>
-            </div>
            </div>
         </div>
       </div>

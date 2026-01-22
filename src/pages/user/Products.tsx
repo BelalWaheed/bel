@@ -61,7 +61,7 @@ export default function Products() {
 
   return (
     <div className="min-h-screen py-8 px-4">
-      <div className="max-w-10/12 mx-auto">
+      <div className="xl:max-w-10/12 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">

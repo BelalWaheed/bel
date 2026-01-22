@@ -4,10 +4,12 @@ import { useAppSelector } from "@/redux/Store";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Home() {
   const { products } = useAppSelector((state) => state.products);
   const { t, isRTL } = useTranslation();
+  const { SEO } = useSEO();
 
   // Get featured products (first 4)
   const featuredProducts = products.slice(0, 4);
@@ -25,6 +27,11 @@ export default function Home() {
 
   return (
     <div className="overflow-hidden">
+      <SEO 
+        title={t("home.heroTitle")}
+        description={t("home.heroSubtitle")}
+        keywords="fashion, electronics, jewelry, mens clothing, womens clothing, online shopping"
+      />
       {/* Hero Section */}
       <section className="relative min-h-[calc(100vh-100px)] flex items-center">
         {/* Animated Background */}
@@ -59,15 +66,13 @@ export default function Home() {
                   <FaArrowRight className={`mx-2 group-hover:translate-x-1 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
                 </Button>
               </Link>
-              <Button variant="outline" className="px-8 py-4 text-lg rounded-xl">
-                {t("common.learnMore")}
-              </Button>
+             
             </div>
 
             {/* Stats */}
-            <div className="flex flex-wrap gap-8 pt-8">
+            <div className="flex flex-wrap gap-12 pt-8">
               <div>
-                <p className="text-3xl font-bold gradient-text">500+</p>
+                <p className="text-3xl font-bold gradient-text">{products.length}+</p>
                 <p className="text-sm text-muted-foreground">{t("common.products")}</p>
               </div>
               <div>
@@ -177,7 +182,7 @@ export default function Home() {
               return (
                 <Link
                   key={category}
-                  to="/products"
+                  to={`/products?category=${encodeURIComponent(category)}`}
                   className="group"
                 >
                   <div className="card-premium aspect-square p-6 flex flex-col items-center justify-center text-center group-hover:shadow-glow transition-all duration-300">

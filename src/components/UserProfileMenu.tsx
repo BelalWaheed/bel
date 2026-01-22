@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiUser, HiLogout, HiCog } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "@/redux/Store";
 import { setLogged, setLoggedUser } from "@/redux/userSlices/profileSlice";
@@ -28,6 +28,14 @@ export default function UserProfileMenu() {
     navigate("/");
   };
 
+  const handleNavigate = (path: string) => {
+    // Use setTimeout to let the dropdown close first
+    setTimeout(() => {
+      navigate(path);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 0);
+  };
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -38,7 +46,7 @@ export default function UserProfileMenu() {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-2 p-1 rounded-full hover:bg-accent transition-colors cursor-pointer">
           <Avatar className="h-8 w-8">
@@ -49,7 +57,7 @@ export default function UserProfileMenu() {
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-56 z-50">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{loggedUser?.name}</p>
@@ -59,23 +67,25 @@ export default function UserProfileMenu() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link to="/profile" className="cursor-pointer">
-            <HiUser className="mr-2 h-4 w-4" />
-            <span>{t("common.profile")}</span>
-          </Link>
+        <DropdownMenuItem 
+          onSelect={() => handleNavigate("/profile")}
+          className="cursor-pointer"
+        >
+          <HiUser className="mr-2 h-4 w-4" />
+          <span>{t("common.profile")}</span>
         </DropdownMenuItem>
         {loggedUser?.role === "admin" && (
-          <DropdownMenuItem asChild>
-            <Link to="/admin" className="cursor-pointer">
-              <HiCog className="mr-2 h-4 w-4" />
-              <span>{t("common.adminDashboard")}</span>
-            </Link>
+          <DropdownMenuItem 
+            onSelect={() => handleNavigate("/admin")}
+            className="cursor-pointer"
+          >
+            <HiCog className="mr-2 h-4 w-4" />
+            <span>{t("common.adminDashboard")}</span>
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={handleLogout}
+          onSelect={handleLogout}
           className="cursor-pointer text-destructive focus:text-destructive"
         >
           <HiLogout className="mr-2 h-4 w-4" />

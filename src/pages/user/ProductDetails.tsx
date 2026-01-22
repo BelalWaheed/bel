@@ -6,6 +6,7 @@ import { addProduct } from "@/redux/userSlices/productSlice";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 import type { Product } from "@/types";
 
 // Star Rating Component
@@ -39,6 +40,7 @@ export default function ProductDetails() {
   const { products, cart } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
   const { t, isRTL } = useTranslation();
+  const { SEO } = useSEO();
   const [isZoomed, setIsZoomed] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
@@ -100,6 +102,19 @@ export default function ProductDetails() {
 
   return (
     <div className="min-h-screen py-8 px-4 relative">
+      <SEO 
+        title={product.title}
+        description={product.description?.slice(0, 160)}
+        image={product.image}
+        keywords={`${product.category}, ${product.title}, buy online`}
+        type="product"
+        product={{
+          price: product.price,
+          currency: 'USD',
+          availability: 'in stock',
+          category: product.category
+        }}
+      />
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in-0 slide-in-from-top-4 duration-300">

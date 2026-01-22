@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 
 interface FormErrors {
   name?: string;
@@ -28,6 +29,7 @@ export default function UserProfile() {
   const { allUsers } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const { t, isRTL } = useTranslation();
+  const { SEO } = useSEO();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -119,6 +121,10 @@ export default function UserProfile() {
 
   return (
     <div className="min-h-screen py-12 px-4">
+      <SEO 
+        title={t("profile.title")}
+        description="Manage your Hola Fushion account. Update your personal information, change password, and view your profile."
+      />
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 rounded-full blur-3xl" />

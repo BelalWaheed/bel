@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaChevronDown, FaShippingFast, FaUndo, FaFileContract, FaShieldAlt, FaQuestionCircle } from "react-icons/fa";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 
 interface FAQItem {
   question: string;
@@ -29,6 +30,7 @@ const AccordionItem = ({ question, answer, isOpen, onClick }: {
 
 export default function CustomerService() {
   const { t } = useTranslation();
+  const { SEO } = useSEO();
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
 
   const faqItems: FAQItem[] = [
@@ -56,6 +58,11 @@ export default function CustomerService() {
 
   return (
     <div className="min-h-screen py-12 px-4">
+      <SEO 
+        title={t("customerService.title")}
+        description="Get help with your orders, shipping, returns, and more. Find answers to FAQs, read our policies, and contact our support team."
+        keywords="customer service, FAQ, shipping, returns, terms, privacy policy, help"
+      />
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 rounded-full blur-3xl" />

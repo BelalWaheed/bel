@@ -1,14 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { FaFilter, FaTimes } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 import { useAppSelector } from "@/redux/Store";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import ProductCard from "@/components/ProductCard";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Products() {
   const { products } = useAppSelector((state) => state.products);
   const { t } = useTranslation();
+  const { SEO } = useSEO();
+  const [searchParams] = useSearchParams();
 
   // Get min and max prices
   const priceStats = useMemo(() => {
@@ -21,10 +25,20 @@ export default function Products() {
   }, [products]);
 
   // Filter states
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const initialCategory = searchParams.get("category") || "all";
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [priceRange, setPriceRange] = useState<[number, number]>([priceStats.min, priceStats.max]);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(initialCategory !== "all");
   const [priceInitialized, setPriceInitialized] = useState(false);
+
+  // Sync category from URL when it changes
+  useEffect(() => {
+    const category = searchParams.get("category");
+    if (category) {
+      setSelectedCategory(category);
+      setShowFilters(true);
+    }
+  }, [searchParams]);
 
   // Get unique categories from products
   const categories = useMemo(() => {
@@ -61,6 +75,11 @@ export default function Products() {
 
   return (
     <div className="min-h-screen py-8 px-4">
+      <SEO 
+        title={t("common.ourProducts")}
+        description="Browse our collection of premium fashion, electronics, and lifestyle products. Filter by category and price to find exactly what you're looking for."
+        keywords="products, fashion, electronics, jewelry, shop, buy online"
+      />
       <div className="xl:max-w-10/12 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-10">

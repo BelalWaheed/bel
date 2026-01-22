@@ -9,12 +9,14 @@ import {
 } from "@/redux/userSlices/productSlice";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 import type { CartItem } from "@/types";
 
 export default function Cart() {
   const { cart } = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
   const { t, isRTL } = useTranslation();
+  const { SEO } = useSEO();
 
   const [toast, setToast] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -82,6 +84,10 @@ export default function Cart() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={t("cart.yourCart")}
+        description="Review your shopping cart. Free shipping on orders over $50. Secure checkout with multiple payment options."
+      />
       {/* Header */}
       <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-6">
@@ -95,7 +101,7 @@ export default function Cart() {
               </p>
             </div>
             <Link to="/products">
-              <Button variant="outline" className="rounded-full gap-2">
+              <Button variant="secondary" className="rounded-full gap-2">
                 {t("cart.continueShopping")}
               </Button>
             </Link>
@@ -297,6 +303,18 @@ export default function Cart() {
                 </div>
               </div>
             </div>
+            {/* Customer Service Link */}
+        <div className="mb-12 p-6 rounded-2xl bg-secondary/30 border border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="font-semibold text-foreground">{t("customerService.needHelp")}</h3>
+            <p className="text-sm text-muted-foreground">{t("customerService.helpDesc")}</p>
+          </div>
+          <Link to="/customer-service">
+            <Button variant="outline" className="rounded-xl whitespace-nowrap">
+              {t("footer.customerService")}
+            </Button>
+          </Link>
+        </div>
           </div>
         )}
       </div>

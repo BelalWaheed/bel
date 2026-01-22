@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 
 interface FormErrors {
   email?: string;
@@ -20,6 +21,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { SEO } = useSEO();
 
   const validate = () => {
     const newErrors: FormErrors = {};
@@ -63,6 +65,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
+      <SEO 
+        title={t("auth.welcomeBack")}
+        description="Sign in to your Hola Fushion account. Access your orders, wishlist, and personalized recommendations."
+      />
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 rounded-full blur-3xl" />

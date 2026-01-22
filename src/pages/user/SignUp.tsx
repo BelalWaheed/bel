@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSEO } from "@/hooks/useSEO";
 
 interface FormErrors {
   name?: string;
@@ -37,6 +38,7 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState<FormErrors>({});
   const { t } = useTranslation();
+  const { SEO } = useSEO();
 
   const validate = () => {
     const newErrors: FormErrors = {};
@@ -85,6 +87,10 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
+      <SEO 
+        title={t("auth.createAccount")}
+        description="Create your Hola Fushion account. Join us for exclusive deals, fast checkout, and personalized shopping experience."
+      />
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 rounded-full blur-3xl" />

@@ -6,11 +6,12 @@ import {
 } from "react-icons/hi";
 import {
   FaFacebookF,
-  FaTwitter,
   FaInstagram,
   FaLinkedinIn,
+  FaGithub,
 } from "react-icons/fa";
 import { useTranslation } from "@/hooks/useTranslation";
+import Logo from "./Logo";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -27,23 +28,18 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Brand Section */}
             <div className="space-y-6">
-              <Link to="/" className="flex items-center gap-2 group">
-                <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-xl">H</span>
-                </div>
-                <span className="text-xl font-bold text-foreground">
-                  Hola Fushion
-                </span>
+              <Link to="/">
+                <Logo size="md" />
               </Link>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 {t("footer.brandDescription")}
               </p>
               <div className="flex gap-3">
                 {[
-                  { icon: FaFacebookF, href: "#" },
-                  { icon: FaTwitter, href: "#" },
-                  { icon: FaInstagram, href: "#" },
-                  { icon: FaLinkedinIn, href: "#" },
+                  { icon: FaGithub, href: "#https://github.com/BelalWaheed" },
+                  { icon: FaLinkedinIn, href: "#https://www.linkedin.com/in/belalwhaeed/" },
+                  { icon: FaInstagram, href: "#https://www.instagram.com/direct/belalwaheed_" },
+                  { icon: FaFacebookF, href: "https://www.facebook.com/profile.php?id=100033451629383" },
                 ].map((social, i) => (
                   <a
                     key={i}

@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 // User Pages
 import Home from "@/pages/user/Home";
 import Products from "@/pages/user/Products";
+import ProductDetails from "@/pages/user/ProductDetails";
 import Cart from "@/pages/user/Cart";
 import Login from "@/pages/user/Login";
 import SignUp from "@/pages/user/SignUp";
@@ -20,6 +21,7 @@ export default function UserLayout() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="products" element={<Products />} />
+          <Route path="products/:productId" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
           <Route path="login" element={<Login />} />
           <Route path="sign-up" element={<SignUp />} />

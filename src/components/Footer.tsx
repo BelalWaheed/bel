@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import {
-  HiOutlineMail,
-  HiOutlinePhone,
-  HiOutlineLocationMarker,
-} from "react-icons/hi";
+// import {
+//   HiOutlineMail,
+//   HiOutlinePhone,
+//   HiOutlineLocationMarker,
+// } from "react-icons/hi";
 import {
   FaFacebookF,
   FaInstagram,
@@ -39,9 +39,9 @@ export default function Footer() {
               </p>
               <div className="flex gap-3">
                 {[
-                  { icon: FaGithub, href: "#https://github.com/BelalWaheed" },
-                  { icon: FaLinkedinIn, href: "#https://www.linkedin.com/in/belalwhaeed/" },
-                  { icon: FaInstagram, href: "#https://www.instagram.com/direct/belalwaheed_" },
+                  { icon: FaGithub, href: "https://github.com/BelalWaheed" },
+                  { icon: FaLinkedinIn, href: "https://www.linkedin.com/in/belalwhaeed/" },
+                  { icon: FaInstagram, href: "https://www.instagram.com/direct/belalwaheed_" },
                   { icon: FaFacebookF, href: "https://www.facebook.com/profile.php?id=100033451629383" },
                 ].map((social, i) => (
                   <a
@@ -104,7 +104,7 @@ export default function Footer() {
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-6">
+            {/* <div className="space-y-6">
               <h3 className="text-lg font-semibold text-foreground">
                 {t("footer.contact")}
               </h3>
@@ -122,7 +122,7 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
           </div>
 
           {/* Bottom Bar */}
